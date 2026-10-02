@@ -51,7 +51,35 @@ to that list as well.
 - [ ] Check across a DST change date: the target is still local midnight.
 - [ ] iPad/iPhone: add to the home screen with a hash in place, open it from the icon, and confirm the countdown loads. If standalone mode drops the hash, flip `STATE_MODE` to `'query'` and retest.
 - [ ] iPad/iPhone: edit the countdown inside the home screen app, close the app completely, and open it from the icon again. The edit is still there.
-- [ ] Edit, then check the title updates, the URL updates, and the "re-bookmark" hint appears.
+- [ ] Edit, then check the title updates and the URL updates. Press Done: the editor closes and the "re-bookmark" hint appears.
+- [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
+
+## Domain
+
+Dwindle runs at the address GitHub Pages gives it,
+`https://<user>.github.io/dwindle/`, and that is enough for now. A custom
+domain is neither needed nor planned.
+
+If that changes: the obvious domains for "dwindle" are taken. Two ways out,
+neither checked for availability yet:
+
+- **Be creative with the domain.** A domain hack or a less common ending, for
+  example `dwindl.ing`, `dwindle.day`, `dwindle.date`, `dwindle.to`, or a
+  prefix such as `getdwindle` or `dwindleapp`.
+- **Rename the project.** Names in the same spirit: Wane, Ebb, Dayfall,
+  Sandglass, Runway, T-minus, Untilthen, Daysleft.
+
+Things to know before moving to another address:
+
+- Every existing link contains the address. GitHub Pages redirects the
+  `github.io` address to a custom domain once one is set, and browsers keep
+  the `#...` part across that redirect, so old links should keep working.
+  Test this before relying on it.
+- Browser storage belongs to the address. After a move, the "last countdown"
+  and edits remembered for home screen icons do not come along; people open
+  their link once on the new address and carry on from there.
+- A rename also means new icons, the page title, the `dwindle:` storage keys
+  and the repository name.
 
 ## Out of scope for v1
 
