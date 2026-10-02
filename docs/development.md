@@ -28,12 +28,6 @@ to that list as well.
 
 ## Before you publish
 
-- The "Buy me a coffee" link in `<aside id="corner">` in `index.html` is
-  commented out until there is an address for it. Replace its `#TODO` and
-  uncomment it. (`app.js` swallows clicks on any `#TODO` link, because
-  following one would overwrite the hash that holds the countdown.)
-- The "Source" link points at the GitHub repository, so it only works for
-  visitors once the repository is public.
 - The ad container (`<div id="ad">`) is empty and hidden. If you ever fill it,
   the ad must sit in a sandboxed `<iframe>`. A third-party script running in
   the page itself can read `location.hash` and would leak the user's goals.
@@ -71,7 +65,7 @@ neither checked for availability yet:
   example `dwindl.ing`, `dwindle.day`, `dwindle.date`, `dwindle.to`, or a
   prefix such as `getdwindle` or `dwindleapp`.
 - **Rename the project.** Names in the same spirit: Wane, Ebb, Dayfall,
-  Sandglass, Runway, T-minus, Untilthen, Daysleft.
+  Sandglass, Runway, T-minus, Untilthen, Daysleft, Sandfall.
 
 Things to know before moving to another address:
 
@@ -90,6 +84,12 @@ Things to know before moving to another address:
 Done/not-done goals, several countdowns per page, a live countdown in the tab
 title, a web app manifest or service worker, accounts or sync, notifications,
 ads or analytics scripts, and the Temporal API.
+
+The "Buy me a coffee" link also waits for a later iteration. It is already in
+`<aside id="corner">` in `index.html`, commented out: give it its address in
+place of `#TODO` and uncomment it. (`app.js` swallows clicks on any `#TODO`
+link, because following one would overwrite the hash that holds the
+countdown.)
 
 ## Ideas for later
 
