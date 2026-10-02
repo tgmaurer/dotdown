@@ -50,8 +50,7 @@ function parseDate(text) {
   return { y, m, d };
 }
 
-function todayISO() {
-  const now = new Date();
+function todayISO(now = new Date()) {
   const pad = (n) => String(n).padStart(2, '0');
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
@@ -250,16 +249,29 @@ function render() {
   tick();
 }
 
+// Seconds until the target, counted the way a wall clock is read: the whole
+// calendar days after today, plus the time left until midnight tonight.
+// Splitting the real elapsed time instead would be an hour out whenever the
+// clocks change between now and the target (a 25-hour or a 23-hour day):
+// at 4 pm it would say "9 hours" to midnight instead of 8.
+function clockSecondsLeft(now, today) {
+  const sinceMidnight =
+    ((now.getHours() * 60 + now.getMinutes()) * 60 + now.getSeconds()) * 1000 + now.getMilliseconds();
+  const tonight = Math.floor((DAY_MS - sinceMidnight) / 1000);
+  const daysAfterToday = daysBetween(today, state.d) - 1;
+  return Math.max(0, daysAfterToday * 86400 + tonight);
+}
+
 // Runs about once a second. Everything is derived from the clock on each run
 // (never from a counter), so a tab that slept in the background cannot drift.
 function tick() {
   clearTimeout(timer);
   if (!state) return;
 
+  const now = new Date();
   const target = localMidnight(state.d);
-  const remaining = target.getTime() - Date.now();
-  const passed = remaining <= 0;
-  const today = todayISO();
+  const passed = now.getTime() >= target.getTime(); // the real moment, exactly
+  const today = todayISO(now);
 
   // The dot grid only changes when the calendar day does.
   if (today !== shownDay) {
@@ -278,7 +290,7 @@ function tick() {
     return; // nothing left to count, so stop ticking
   }
 
-  const seconds = Math.floor(remaining / 1000);
+  const seconds = clockSecondsLeft(now, today);
   const days = Math.floor(seconds / 86400);
   const pad = (n) => String(n).padStart(2, '0');
   $('t-days').textContent = days;
@@ -288,8 +300,8 @@ function tick() {
   $('t-minutes').textContent = pad(Math.floor(seconds / 60) % 60);
   $('t-seconds').textContent = pad(seconds % 60);
 
-  // Wake up just after the next whole second of `remaining` ticks over.
-  timer = setTimeout(tick, (remaining % 1000) + 20);
+  // Wake up just after the clock reaches its next whole second.
+  timer = setTimeout(tick, ((1000 - now.getMilliseconds()) % 1000) + 20);
 }
 
 // One dot per calendar day from the creation date up to the target date.
