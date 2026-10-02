@@ -341,6 +341,7 @@ function addGoalRow(text) {
   const row = document.createElement('li');
   const input = document.createElement('input');
   input.type = 'text';
+  input.name = 'goal';
   input.maxLength = MAX_GOAL;
   input.autocomplete = 'off';
   input.placeholder = 'Book flights';

@@ -599,8 +599,8 @@ input::-webkit-date-and-time-value {
 #corner {
   position: fixed;
   right: var(--gutter-right); /* lines up with the content's right edge */
-  /*bottom: max(0.25rem, env(safe-area-inset-bottom));*/
-  bottom: 0;
+  /* 0 on desktop; on phones, clear of the home indicator and rounded corners. */
+  bottom: env(safe-area-inset-bottom, 0px);
   display: flex;
   border-radius: var(--radius);
   background: var(--bg); /* so page text never shows through the links */
