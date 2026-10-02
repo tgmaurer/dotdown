@@ -160,12 +160,17 @@ function readState() {
   return STATE_MODE === 'query' ? fromQuery || fromHash : fromHash || fromQuery;
 }
 
-// replaceState, not pushState or location.hash: no history entry per edit.
-function writeState(encoded) {
+// Edits replace the current history entry, so Back does not step through
+// every change. Starting a new countdown is the one exception: pass `from`
+// (the countdown being left) and a new entry is added, so Back returns to it.
+// That entry's state { create: true, from } marks the create form, so going
+// back or forward to it shows the form again instead of the last countdown.
+function writeState(encoded, from = '') {
   let url = location.pathname;
   if (encoded) url += STATE_MODE === 'query' ? `?${QUERY_KEY}=${encoded}` : `#${encoded}`;
   try {
-    history.replaceState(null, '', url);
+    if (from) history.pushState({ create: true, from }, '', url);
+    else history.replaceState(null, '', url);
   } catch (err) {
     // Safari throws if replaceState is called too often. The next edit retries.
   }
@@ -535,6 +540,12 @@ function load() {
     else showCreate('This link is damaged or from a newer version, so it can’t be read. You can start a new countdown below.');
     return;
   }
+  // Back or Forward to a create form: show the form, not the last countdown.
+  if (history.state && history.state.create) {
+    showCreate('', history.state.from);
+    return;
+  }
+
   const last = readLast();
   const decoded = tryDecode(last);
   if (decoded) {
@@ -749,7 +760,7 @@ $('edit-toggle').addEventListener('click', () => {
 // new one is actually created, so "Back to ..." (or a reload) undoes this.
 function startNew() {
   const current = encode(state);
-  writeState('');
+  writeState('', current); // a new history entry: Back returns to this countdown
   showCreate('', current);
   nameInput.focus();
 }
@@ -758,6 +769,11 @@ $('f-new').addEventListener('click', startNew);
 $('new-top').addEventListener('click', startNew);
 
 $('f-back').addEventListener('click', () => {
+  // Came here with "New countdown": step back in history, as Back would.
+  if (history.state && history.state.create) {
+    history.back();
+    return;
+  }
   const previous = tryDecode(backTo);
   if (!previous) return;
   writeState(backTo);
@@ -778,6 +794,9 @@ document.addEventListener('click', (event) => {
 
 // A link pasted or edited by hand in the address bar.
 window.addEventListener('hashchange', load);
+
+// Back and Forward between a countdown and a create form opened from it.
+window.addEventListener('popstate', load);
 
 // ---------- No zoom ----------
 // Deliberate: zooming is switched off wherever a page is able to. Touch

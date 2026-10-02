@@ -55,6 +55,7 @@ to that list as well.
 - [ ] Getting close: in the last quarter of its span (at most the last 30 days) a countdown shows a yellow "Getting close" tag.
 - [ ] Final stretch: in the last tenth of its span (at most the last 7 days, at least the last day) the tag turns red, reads "Time is almost up", and the day number turns red. One day earlier it does not.
 - [ ] "% gone" starts at 0% for a new countdown, rises during the day, and reads 100% only once the target is reached.
+- [ ] From a countdown, press "New countdown" and create another one. The browser's Back button returns to the first countdown, and Forward to the new one. Editing does not add Back steps.
 - [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
 
 ## Domain
