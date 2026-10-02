@@ -14,6 +14,7 @@
 const STATE_MODE = 'hash';
 const QUERY_KEY = 's';
 const STORAGE_KEY = 'dwindle:last';
+const HOME_KEY = 'dwindle:home'; // home screen only: { link in the icon: latest link }
 
 const VERSION = 1;
 const MAX_NAME = 60;
@@ -22,15 +23,13 @@ const MAX_GOALS = 20;
 const MAX_DOTS = 730; // beyond this, one dot stands for several days
 const DAY_MS = 86400000;
 
-const HINT_CREATED = 'Link created. Bookmark it to keep this countdown.';
-const HINT_UPDATED = 'Link updated. Re-bookmark to keep this version.';
-
 const $ = (id) => document.getElementById(id);
 
 let state = null; // the current countdown { v, t, d, c, g }, or null
 let timer = 0; // id of the pending tick
 let shownDay = ''; // the day the dot grid was last drawn for
 let backTo = ''; // encoded countdown the create form can return to
+let iconLink = null; // home screen only: the link the icon was made from
 
 // ---------- Dates ----------
 // Dates are plain "YYYY-MM-DD" strings. They only become Date objects at the
@@ -163,11 +162,44 @@ function readLast() {
   }
 }
 
+// Returns whether it worked. The URL holds the state either way.
 function saveLast(encoded) {
   try {
     localStorage.setItem(STORAGE_KEY, encoded);
+    return true;
   } catch (err) {
-    // The URL still holds the state, so there is nothing to do.
+    return false;
+  }
+}
+
+// ---------- Home screen ----------
+// A page opened from a home screen icon has no address bar and no browser
+// menu, and the icon keeps opening the link it was made from: it cannot be
+// updated or re-added from in here. So edits made in this mode are remembered
+// against the icon's link, and the next launch carries on from the latest one.
+
+function isHomeScreen() {
+  return navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+}
+
+function readHomeEdits() {
+  try {
+    const edits = JSON.parse(localStorage.getItem(HOME_KEY));
+    return edits && typeof edits === 'object' ? edits : {};
+  } catch (err) {
+    return {};
+  }
+}
+
+// Returns whether it worked.
+function saveHomeEdit(encoded) {
+  try {
+    const edits = readHomeEdits();
+    edits[iconLink] = encoded;
+    localStorage.setItem(HOME_KEY, JSON.stringify(edits));
+    return true;
+  } catch (err) {
+    return false;
   }
 }
 
@@ -331,19 +363,21 @@ function formToState() {
 }
 
 // The one path every change takes: URL, storage, screen, hint.
-function commit(next, hint) {
+// created: true for a brand-new countdown, false for an edit.
+function commit(next, created) {
   const encoded = encode(next);
   writeState(encoded);
-  saveLast(encoded);
+  let saved = saveLast(encoded);
+  if (iconLink) saved = saveHomeEdit(encoded);
   state = next;
   render();
-  showHint(hint);
+  showHint(hintText(created, saved));
 }
 
 // Saves the form while editing, if it is valid and something really changed.
 function saveEdits() {
   const next = formToState();
-  if (next && encode(next) !== encode(state)) commit(next, HINT_UPDATED);
+  if (next && encode(next) !== encode(state)) commit(next, false);
 }
 
 function openEditor() {
@@ -390,7 +424,19 @@ function showCreate(message, fallback) {
 
 // Decides what to show from the URL (and, for a bare URL, from storage).
 function load() {
-  const encoded = readState();
+  let encoded = readState();
+
+  // First load from a home screen icon: note the icon's link, and if the
+  // countdown has been changed in here since, show the latest version.
+  if (iconLink === null && isHomeScreen()) {
+    iconLink = encoded;
+    const latest = readHomeEdits()[iconLink];
+    if (tryDecode(latest)) {
+      encoded = latest;
+      writeState(latest);
+    }
+  }
+
   if (encoded) {
     const decoded = tryDecode(encoded);
     if (decoded) showCountdown(decoded);
@@ -408,6 +454,40 @@ function load() {
 }
 
 // ---------- Hint and copy link ----------
+
+// Where the page is running, which decides how a link is best kept.
+function device() {
+  if (isHomeScreen()) return 'home-screen';
+  // Phones and tablets: touch is the main input and nothing can hover.
+  if (!matchMedia('(hover: none) and (pointer: coarse)').matches) return 'desktop';
+  // An iPad calls itself a Mac, so a "Mac" with a touch screen counts too.
+  const ua = navigator.userAgent;
+  const apple = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  return apple ? 'apple-touch' : 'touch';
+}
+
+// A browser cannot update a bookmark or a home screen icon, so after every
+// change the hint says how to keep the new link on this kind of device.
+// created: a new countdown rather than an edit. saved: storage worked.
+function hintText(created, saved) {
+  const start = created ? 'Link created.' : 'Link updated.';
+  const bookmark = created ? 'Bookmark it' : 'Re-bookmark it';
+  const again = created ? '' : ' again';
+  switch (device()) {
+    case 'home-screen':
+      // Here the app itself keeps the change (see "Home screen" above).
+      if (saved) return `${start} This icon now opens this ${created ? 'countdown' : 'version'}.`;
+      return `${start} Copy it to keep this ${created ? 'countdown' : 'version'}.`;
+    case 'apple-touch':
+      return `${start} ${bookmark}, or Share then Add to Home Screen${again}, to keep it.`;
+    case 'touch':
+      return `${start} ${bookmark}, or browser menu then Add to Home screen${again}, to keep it.`;
+    default:
+      return created
+        ? 'Link created. Bookmark it to keep this countdown.'
+        : 'Link updated. Re-bookmark to keep this version.';
+  }
+}
 
 function showHint(text) {
   $('hint').hidden = false;
@@ -461,7 +541,7 @@ editor.addEventListener('submit', (event) => {
   dateInput.setCustomValidity(parseDate(dateInput.value) ? '' : 'Pick a real date (YYYY-MM-DD).');
   if (!editor.reportValidity()) return;
   if (state) saveEdits();
-  else commit(formToState(), HINT_CREATED);
+  else commit(formToState(), true);
   closeEditor();
 });
 

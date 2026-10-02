@@ -22,6 +22,14 @@ app works without storage (private mode).
 
 Browsers cannot update an existing bookmark, so after every edit the app shows
 a small hint with a "Copy link" button. Re-bookmark to keep the new version.
+On phones and tablets the hint also suggests adding the page to the home screen,
+and names the steps for the device.
+
+A page opened from a home screen icon is a special case: there is no browser
+menu in there, and the icon keeps opening the link it was made from. So in
+that mode the app remembers edits itself (`dwindle:home` in `localStorage`
+maps the icon's link to the latest one) and carries on from the latest version
+at the next launch.
 
 ## State format
 
