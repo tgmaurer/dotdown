@@ -128,13 +128,6 @@ body {
   }
 }
 
-/* Only while the hint bar is showing: extra room so it never covers the
-   last lines of the page. Sized for the longest hint, which wraps to five
-   lines on a narrow phone. */
-body:has(.hint:not([hidden])) {
-  padding-bottom: calc(11.5rem + env(safe-area-inset-bottom));
-}
-
 main {
   max-width: 38rem;
   margin: 0 auto;
@@ -592,6 +585,9 @@ input::-webkit-date-and-time-value {
 }
 
 /* ---------- Hint (after an edit) ---------- */
+/* Floats over the page and reserves no room, so showing or dismissing it
+   never changes the page's layout or height. On a short screen it can sit
+   over the last lines of the page until it is dismissed. */
 
 .hint {
   position: fixed;
