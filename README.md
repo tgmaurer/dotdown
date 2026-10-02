@@ -6,8 +6,8 @@ day of the span, so you can watch the deadline shrink. You can attach a short li
 goals. It is not a task tracker.
 
 There is no backend, no account, no build step and no dependency. It is three
-plain files (`index.html`, `style.css`, `app.js`) and two icons, and it makes
-no third-party requests.
+plain files (`index.html`, `style.css`, `app.js`), two icons and one font file
+(Commit Mono, served from `fonts/`), and it makes no third-party requests.
 
 ## How it works
 

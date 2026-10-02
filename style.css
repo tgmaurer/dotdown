@@ -1,5 +1,16 @@
-/* Dwindle. Near-black on off-white, one monospace family from the system,
+/* Dwindle. Near-black on off-white, one monospace family (Commit Mono),
    barely rounded corners, and a single red accent that marks today. */
+
+/* Commit Mono is served from this folder, so there is no third-party request.
+   The one variable file holds every weight from 200 to 700.
+   Licence: fonts/OFL.txt (SIL Open Font License). */
+@font-face {
+  font-family: "Commit Mono";
+  src: url("fonts/CommitMono-Variable.woff2") format("woff2");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --bg: #f5f5f2;
@@ -9,10 +20,11 @@
   --accent: #cf2e1c; /* today, and things that need attention */
   --radius: 2px;
 
-  /* System fonts only. Every digit in a monospace font has the same width,
-     so the ticking numbers cannot jitter. */
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
-    "Cascadia Mono", "Roboto Mono", "Liberation Mono", monospace;
+  /* Every digit in a monospace font has the same width, so the ticking
+     numbers cannot jitter. The system fonts are only the fallback while
+     Commit Mono loads, or if it fails to. */
+  --mono: "Commit Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "Roboto Mono", "Liberation Mono", monospace;
 
   color-scheme: light dark;
 }
@@ -41,6 +53,28 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Scrollbar: grey thumb (quieter than the text), no visible track. */
+  scrollbar-color: var(--muted) transparent;
+  /*scrollbar-width: thin;*/ /*? Maybe add this */
+}
+
+/* The same for browsers without scrollbar-color (older Safari). The
+   @supports guard matters: where scrollbar-color works, these rules would
+   only force the scrollbar to be permanently visible. */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: var(--radius);
+    background: var(--muted);
+  }
 }
 
 body {
@@ -52,9 +86,13 @@ body {
     max(1.25rem, env(safe-area-inset-right))
     calc(10rem + env(safe-area-inset-bottom))
     max(1.25rem, env(safe-area-inset-left));
+    /* TODO: Adjust bottom padding (it is fairly large and causes scrolling unnecessarily sometimes) */
   background: var(--bg);
   color: var(--ink);
   font: 0.9375rem/1.6 var(--mono);
+  /* Commit Mono's optional letter shapes: cv02 single-circle g, cv05 simpler
+     @, cv06 straight-stemmed 6 and 9. Must come after `font`, which resets it. */
+  font-feature-settings: "cv02", "cv05", "cv06";
 }
 
 main {
@@ -130,7 +168,7 @@ ul {
 }
 
 .num {
-  font-weight: 700;
+  font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
 
@@ -214,7 +252,7 @@ ul {
   background: var(--faint);
 }
 
-/* Today: the one coloured square, with a thin frame, slowly breathing. */
+/* Today: the one coloured square, with a thin frame and a quiet pulse. */
 .dots .today {
   background: var(--accent);
   outline: 1px solid var(--accent);
@@ -223,13 +261,20 @@ ul {
 
 @media (prefers-reduced-motion: no-preference) {
   .dots .today {
-    animation: breathe 2.4s ease-in-out infinite;
+    animation: pulse 1.8s ease-in-out infinite;
   }
 }
 
-@keyframes breathe {
-  50% {
-    opacity: 0.35;
+/* Solid for the first half of each cycle, then one short, shallow dip.
+   To tune: the duration above sets the pace, the opacity here the depth. */
+@keyframes pulse {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.6;
   }
 }
 
