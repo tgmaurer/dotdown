@@ -262,6 +262,16 @@ function clockSecondsLeft(now, today) {
   return Math.max(0, daysAfterToday * 86400 + tonight);
 }
 
+// The final stretch: the last tenth of the whole span, but never more than the
+// last 7 days and never less than the last day. A 180-day countdown is in it
+// for its last week, a 30-day one for its last 3 days, a 5-day one for its
+// last day.
+function isFinalStretch(today) {
+  const span = Math.max(1, daysBetween(state.c, state.d));
+  const stretch = Math.min(7, Math.max(1, Math.round(span / 10)));
+  return daysBetween(today, state.d) <= stretch;
+}
+
 // Runs about once a second. Everything is derived from the clock on each run
 // (never from a counter), so a tab that slept in the background cannot drift.
 function tick() {
@@ -289,6 +299,10 @@ function tick() {
       ago < 1 ? 'Today is the day.' : `Deadline passed ${ago} ${ago === 1 ? 'day' : 'days'} ago`;
     return; // nothing left to count, so stop ticking
   }
+
+  const urgent = isFinalStretch(today);
+  $('ticker').classList.toggle('urgent', urgent);
+  $('soon').hidden = !urgent;
 
   const seconds = clockSecondsLeft(now, today);
   const days = Math.floor(seconds / 86400);

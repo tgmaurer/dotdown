@@ -220,9 +220,30 @@ ul {
   font-size: clamp(2.5rem, 12vw, 5.5rem);
 }
 
-.days .unit {
-  display: block;
+/* The "days" label, and next to it the tag shown in the final stretch. */
+.days-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
   margin-top: 0.75rem;
+}
+
+/* Final stretch (see isFinalStretch in app.js): the day number turns red and
+   a small tag says so in words, so the signal does not rely on colour alone. */
+.ticker.urgent .days .num {
+  color: var(--accent);
+}
+
+.soon {
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
 }
 
 .clock {
