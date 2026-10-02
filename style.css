@@ -18,7 +18,7 @@
   --muted: #62625e;
   --faint: #d5d5d0; /* elapsed days */
   --accent: #cf2e1c; /* today, and things that need attention */
-  --warn: #f1c232; /* the "getting close" tag; same in light and dark */
+  --warn: #e0aa00; /* the "getting close" tag: deeper here, to stand out on the light page */
   --radius: 2px;
 
   /* Keeps the layout still when the page scrollbar appears or disappears.
@@ -52,6 +52,7 @@
     --muted: #a2a29d;
     --faint: #3a3a37;
     --accent: #ff6a55;
+    --warn: #f1c232;
   }
 }
 
@@ -171,7 +172,9 @@ ul {
   border-bottom: 2px solid var(--ink);
   font-size: 2rem;
   font-weight: 700;
-  letter-spacing: -0.04em;
+  /*letter-spacing: -0.04em;*/
+  letter-spacing: -0.01em;
+  /* Increased letter spacing for better legibility */
   line-height: 1.1;
 }
 
@@ -275,6 +278,7 @@ ul {
   font-size: clamp(1.75rem, 8vw, 3rem);
   font-weight: 700;
   letter-spacing: -0.04em;
+  /* Maybe increase letter spacing for better legibility */
   line-height: 1.1;
 }
 
