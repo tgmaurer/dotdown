@@ -534,6 +534,32 @@ document.addEventListener('click', (event) => {
 // A link pasted or edited by hand in the address bar.
 window.addEventListener('hashchange', load);
 
+// ---------- No zoom ----------
+// Deliberate: zooming is switched off wherever a page is able to. Touch
+// screens are handled by the viewport tag and `touch-action` in style.css;
+// the rest is here. The browser's own menu zoom and the operating system's
+// accessibility zoom cannot be blocked by a page.
+
+// Safari: pinch on a touch screen or trackpad.
+document.addEventListener('gesturestart', (event) => event.preventDefault());
+
+// Other browsers: a trackpad pinch and Ctrl/Cmd + wheel both arrive as a
+// wheel event with the modifier key set. Plain scrolling is not affected.
+window.addEventListener(
+  'wheel',
+  (event) => {
+    if (event.ctrlKey || event.metaKey) event.preventDefault();
+  },
+  { passive: false }
+);
+
+// Ctrl/Cmd with +, - or 0.
+window.addEventListener('keydown', (event) => {
+  if ((event.ctrlKey || event.metaKey) && ['+', '-', '=', '0'].includes(event.key)) {
+    event.preventDefault();
+  }
+});
+
 // Timers are throttled in background tabs, so catch up the moment we are back.
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) tick();

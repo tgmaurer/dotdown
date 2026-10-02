@@ -56,6 +56,13 @@ html {
   /* Scrollbar: grey thumb (quieter than the text), no visible track. */
   scrollbar-color: var(--muted) transparent;
   /*scrollbar-width: thin;*/ /*? Maybe add this */
+  /* No pinch or double-tap zoom on touch screens; scrolling still works.
+     (iOS ignores user-scalable=no in the viewport tag, but honours this.) */
+  touch-action: pan-x pan-y;
+  /* No coloured flash box when something is tapped (Android draws a blue
+     one). Taps get the :active style further down instead; the keyboard
+     focus outline is separate and stays. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* The same for browsers without scrollbar-color (older Safari). The
@@ -79,20 +86,34 @@ html {
 
 body {
   margin: 0;
-  /* Safe-area insets for notched phones (needs viewport-fit=cover).
-     The bottom padding keeps content clear of the fixed corner and hint. */
+  /* Same padding on the top, left and right. Safe-area insets are for
+     notched phones (needs viewport-fit=cover). The bottom padding is just
+     enough to keep content clear of the fixed corner links, so short pages
+     do not scroll for no reason. */
   padding:
-    max(2.5rem, env(safe-area-inset-top))
+    max(1.25rem, env(safe-area-inset-top))
     max(1.25rem, env(safe-area-inset-right))
-    calc(10rem + env(safe-area-inset-bottom))
+    calc(4rem + env(safe-area-inset-bottom))
     max(1.25rem, env(safe-area-inset-left));
-    /* TODO: Adjust bottom padding (it is fairly large and causes scrolling unnecessarily sometimes) */
   background: var(--bg);
   color: var(--ink);
   font: 0.9375rem/1.6 var(--mono);
   /* Commit Mono's optional letter shapes: cv02 single-circle g, cv05 simpler
      @, cv06 straight-stemmed 6 and 9. Must come after `font`, which resets it. */
   font-feature-settings: "cv02", "cv05", "cv06";
+}
+
+/* Wider than a phone: more air above the page. */
+@media (min-width: 40rem) {
+  body {
+    padding-top: max(2.5rem, env(safe-area-inset-top));
+  }
+}
+
+/* Only while the hint bar is showing: extra room so it never covers the
+   last lines of the page. */
+body:has(.hint:not([hidden])) {
+  padding-bottom: calc(10rem + env(safe-area-inset-bottom));
 }
 
 main {
@@ -211,12 +232,14 @@ ul {
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1.1;
+  text-wrap: pretty;
 }
 
 .target {
   margin-top: 1rem;
   color: var(--muted);
   font-size: 0.8125rem;
+  text-wrap: pretty;
 }
 
 /* ---------- Day grid (one square per day) ---------- */
@@ -230,6 +253,8 @@ ul {
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--dot));
   gap: calc(var(--dot) * 0.625);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Short spans get bigger squares so the grid does not look lost. */
@@ -323,6 +348,14 @@ button {
   font: inherit;
   color: inherit;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Feedback while a button or link is pressed (touch or mouse). */
+button:active:not(:disabled),
+a:active {
+  opacity: 0.6;
 }
 
 button:disabled {
@@ -346,8 +379,12 @@ button:disabled {
   text-underline-offset: 0.3em;
 }
 
-.link:hover {
-  text-decoration-thickness: 2px;
+/* Hover styles are limited to devices with a real pointer. On a touch
+   screen a hover style would stick to whatever was tapped last. */
+@media (hover: hover) {
+  .link:hover {
+    text-decoration-thickness: 2px;
+  }
 }
 
 .primary {
@@ -363,9 +400,11 @@ button:disabled {
   text-transform: uppercase;
 }
 
-.primary:hover {
-  background: var(--bg);
-  color: var(--ink);
+@media (hover: hover) {
+  .primary:hover {
+    background: var(--bg);
+    color: var(--ink);
+  }
 }
 
 .actions {
@@ -453,8 +492,10 @@ input::-webkit-date-and-time-value {
   line-height: 1;
 }
 
-.remove:hover {
-  color: var(--accent);
+@media (hover: hover) {
+  .remove:hover {
+    color: var(--accent);
+  }
 }
 
 .form-actions {
@@ -519,8 +560,10 @@ input::-webkit-date-and-time-value {
   text-underline-offset: 0.3em;
 }
 
-#corner a:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  #corner a:hover {
+    color: var(--ink);
+  }
 }
 
 .ad {
