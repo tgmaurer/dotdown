@@ -88,3 +88,8 @@ Then open <http://localhost:8000/>.
 
 Deploying, the pre-publish to-do list, the manual test checklist and the v1
 scope are in [docs/development.md](docs/development.md).
+
+## Licence
+
+The code is under the [MIT License](LICENSE.txt). The font, Commit Mono, is under
+the SIL Open Font License; its text is in [fonts/OFL.txt](fonts/OFL.txt).

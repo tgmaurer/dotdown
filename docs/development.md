@@ -20,8 +20,8 @@ changes.
 
 GitHub Pages publishes the whole branch, so repository-only files have to be
 kept out explicitly. `_config.yml` lists them under `exclude`: currently
-`README.md` and the `docs/` folder. Files that start with a dot (`.gitignore`)
-and `_config.yml` itself are never published.
+`README.md`, `LICENSE.txt` and the `docs/` folder. Files that start with a dot
+(`.gitignore`) and `_config.yml` itself are never published.
 
 When you add a file to the repository root that is not part of the app, add it
 to that list as well.

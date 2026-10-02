@@ -3,4 +3,5 @@
 # the published site. Dotfiles (.gitignore) and this file are never published.
 exclude:
   - README.md
+  - LICENSE.txt
   - docs/
