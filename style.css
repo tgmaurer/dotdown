@@ -434,13 +434,22 @@ button:disabled {
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+  transition: opacity 0.15s ease;
 }
 
+/* Hover fades the button a little; pressing it fades it further (see
+   button:active above), the same feedback a tap gives on a phone. */
 @media (hover: hover) {
+  .primary:hover {
+    opacity: 0.8;
+  }
+
+  /* Earlier hover style, kept in case it is wanted back: colours inverted.
   .primary:hover {
     background: var(--bg);
     color: var(--ink);
   }
+  */
 }
 
 .actions {
