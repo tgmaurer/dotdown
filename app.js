@@ -217,6 +217,14 @@ const targetFormat = new Intl.DateTimeFormat('en-GB', {
   minute: '2-digit',
 });
 
+// The start is a whole day (the day the countdown was created), so no time.
+const startFormat = new Intl.DateTimeFormat('en-GB', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
 // Draws everything for the current state, then starts the clock.
 function render() {
   document.title = state.t;
@@ -224,6 +232,8 @@ function render() {
   $('notice').hidden = true;
   $('view').hidden = false;
   $('name').textContent = state.t;
+  $('start').textContent = startFormat.format(localMidnight(state.c));
+  $('target').textContent = targetFormat.format(localMidnight(state.d));
 
   $('goals').hidden = state.g.length === 0;
   $('goal-list').replaceChildren(
@@ -257,8 +267,7 @@ function tick() {
 
   $('ticker').hidden = passed;
   $('passed').hidden = !passed;
-  $('target').textContent =
-    `${passed ? 'since' : 'until'} ${targetFormat.format(target)} (your local time)`;
+  $('target-label').textContent = passed ? 'ended' : 'until';
 
   if (passed) {
     const ago = daysBetween(state.d, today);

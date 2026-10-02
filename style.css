@@ -70,7 +70,6 @@ html {
   text-size-adjust: 100%;
   /* Scrollbar: grey thumb (quieter than the text), no visible track. */
   scrollbar-color: var(--muted) transparent;
-  /*scrollbar-width: thin;*/ /*? Maybe add this */
   /* No pinch or double-tap zoom on touch screens; scrolling still works.
      (iOS ignores user-scalable=no in the viewport tag, but honours this.) */
   touch-action: pan-x pan-y;
@@ -116,6 +115,10 @@ body {
   /* Commit Mono's optional letter shapes: cv02 single-circle g, cv05 simpler
      @, cv06 straight-stemmed 6 and 9. Must come after `font`, which resets it. */
   font-feature-settings: "cv02", "cv05", "cv06";
+  /* Wherever text runs over a line, break it so the last line is not a
+     lone word. Inherited, so this covers the name, the dates, goals, the
+     hint and the notice. Browsers without support just wrap as usual. */
+  text-wrap: pretty;
 }
 
 /* Wider than a phone: more air above the page. */
@@ -141,6 +144,8 @@ h1,
 h2,
 p,
 ul,
+dl,
+dd,
 fieldset {
   margin: 0;
   padding: 0;
@@ -248,14 +253,29 @@ ul {
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1.1;
-  text-wrap: pretty;
 }
 
-.target {
+/* The span in words: "from <start>" above "until <target>". The labels share
+   one column, so the two dates line up. */
+.dates {
   margin-top: 1rem;
   color: var(--muted);
   font-size: 0.8125rem;
-  text-wrap: pretty;
+}
+
+.dates div {
+  display: flex;
+  gap: 1ch;
+}
+
+.dates dt {
+  flex: none;
+  width: 5ch; /* "until" and "ended" are the longest labels */
+}
+
+/* "(your local time)" moves to the next line as a whole, never split. */
+.together {
+  white-space: nowrap;
 }
 
 /* ---------- Day grid (one square per day) ---------- */
