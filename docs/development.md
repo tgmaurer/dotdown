@@ -28,9 +28,12 @@ to that list as well.
 
 ## Before you publish
 
-- Replace the two `#TODO` links in `<aside id="corner">` in `index.html`.
-  (Until then `app.js` swallows clicks on them, because following a `#TODO`
-  link would overwrite the hash that holds the countdown.)
+- The "Buy me a coffee" link in `<aside id="corner">` in `index.html` is
+  commented out until there is an address for it. Replace its `#TODO` and
+  uncomment it. (`app.js` swallows clicks on any `#TODO` link, because
+  following one would overwrite the hash that holds the countdown.)
+- The "Source" link points at the GitHub repository, so it only works for
+  visitors once the repository is public.
 - The ad container (`<div id="ad">`) is empty and hidden. If you ever fill it,
   the ad must sit in a sandboxed `<iframe>`. A third-party script running in
   the page itself can read `location.hash` and would leak the user's goals.
@@ -47,6 +50,7 @@ to that list as well.
 - [ ] Set the target to tomorrow, today and yesterday: the passed state and zero state behave.
 - [ ] Check across a DST change date: the target is still local midnight.
 - [ ] iPad/iPhone: add to the home screen with a hash in place, open it from the icon, and confirm the countdown loads. If standalone mode drops the hash, flip `STATE_MODE` to `'query'` and retest.
+- [ ] iPad/iPhone: edit the countdown inside the home screen app, close the app completely, and open it from the icon again. The edit is still there.
 - [ ] Edit, then check the title updates, the URL updates, and the "re-bookmark" hint appears.
 
 ## Out of scope for v1
