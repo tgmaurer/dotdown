@@ -87,3 +87,18 @@ Things to know before moving to another address:
 Done/not-done goals, several countdowns per page, a live countdown in the tab
 title, a web app manifest or service worker, accounts or sync, notifications,
 ads or analytics scripts, and the Temporal API.
+
+## Ideas for later
+
+Not planned in detail and not started. Written down so they are not lost.
+
+- **A list of countdowns.** Today the browser remembers only the last
+  countdown (`dwindle:last`), so opening the bare address brings back just
+  that one. The idea is to remember several and let you switch between them.
+  Things to settle first: where the list shows without crowding the page;
+  whether a countdown joins the list when it is created, edited or merely
+  opened; how one is removed; and how it fits with home screen icons, which
+  already remember their own latest version. The list would stay in this
+  browser only, and every countdown would still be a link of its own. This is
+  different from showing several countdowns on one page, which stays out of
+  scope.
