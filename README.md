@@ -1,8 +1,8 @@
 # Dwindle
 
 A tiny countdown to one date. Give it a name and a target date and it shows the
-days, hours, minutes and seconds that are left, plus one dot for every day of
-the span, so you can watch the deadline shrink. You can attach a short list of
+days, hours, minutes and seconds that are left, plus one small square for every
+day of the span, so you can watch the deadline shrink. You can attach a short list of
 goals. It is not a task tracker.
 
 There is no backend, no account, no build step and no dependency. It is three
@@ -42,7 +42,7 @@ JSON, encoded as UTF-8, then base64url without padding, placed after the `#`:
 | `v` | Format version. Currently `1`. |
 | `t` | Name, up to 60 characters. |
 | `d` | Target date, plain `YYYY-MM-DD`. The countdown ends at local midnight at the start of this day. |
-| `c` | Creation date, plain `YYYY-MM-DD`. Set to the local date when the countdown is created and never changed by edits. The dot grid starts here. |
+| `c` | Creation date, plain `YYYY-MM-DD`. Set to the local date when the countdown is created and never changed by edits. The day grid starts here. |
 | `g` | Goals, up to 20, each an object `{ "t": "..." }` of up to 120 characters. Objects rather than strings so that fields can be added later. |
 
 Links live forever, so every decoded payload goes through `migrate(payload)` in
@@ -76,43 +76,7 @@ python3 -m http.server 8000
 
 Then open <http://localhost:8000/>.
 
-## Deploy to GitHub Pages
+## More
 
-1. Create a repository named `dwindle` and push these files to the root of the
-   `main` branch.
-2. In the repository, open **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to **Deploy from a branch**,
-   choose **`main`** and **`/ (root)`**, and save.
-4. After a minute the app is live at `https://<user>.github.io/dwindle/`.
-
-All asset paths are relative, so the app works from that sub-path without
-changes.
-
-## Before you publish
-
-- Replace the two `#TODO` links in `<aside id="corner">` in `index.html`.
-  (Until then `app.js` swallows clicks on them, because following a `#TODO`
-  link would overwrite the hash that holds the countdown.)
-- The ad container (`<div id="ad">`) is empty and hidden. If you ever fill it,
-  the ad must sit in a sandboxed `<iframe>`. A third-party script running in
-  the page itself can read `location.hash` and would leak the user's goals.
-- There is deliberately no web app manifest: its `start_url` could replace the
-  current URL and drop the state.
-
-## Manual test checklist
-
-- [ ] Create a countdown, reload the page, and the hash and view persist.
-- [ ] Open the bare URL in the same browser, and it restores the last countdown from localStorage.
-- [ ] Paste a link into a private window, and it renders from the hash alone.
-- [ ] Corrupt the hash by hand, and a friendly message appears with no crash.
-- [ ] Emoji and umlauts in name and goals round-trip.
-- [ ] Set the target to tomorrow, today and yesterday: the passed state and zero state behave.
-- [ ] Check across a DST change date: the target is still local midnight.
-- [ ] iPad/iPhone: add to the home screen with a hash in place, open it from the icon, and confirm the countdown loads. If standalone mode drops the hash, flip `STATE_MODE` to `'query'` and retest.
-- [ ] Edit, then check the title updates, the URL updates, and the "re-bookmark" hint appears.
-
-## Out of scope for v1
-
-Done/not-done goals, several countdowns per page, a live countdown in the tab
-title, a web app manifest or service worker, accounts or sync, notifications,
-ads or analytics scripts, and the Temporal API.
+Deploying, the pre-publish to-do list, the manual test checklist and the v1
+scope are in [docs/development.md](docs/development.md).
