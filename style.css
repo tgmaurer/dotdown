@@ -193,6 +193,34 @@ ul {
 
 /* ---------- Countdown ---------- */
 
+/* Brand on the left, "New countdown" on the right, both small. */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: -0.75rem 0 1rem; /* the button's 44px tap area may overlap the padding above */
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.brand img {
+  border-radius: 3px;
+}
+
+/* Right-aligned, so its text ends at the column edge. */
+#new-top {
+  text-align: right;
+}
+
 .name {
   padding-bottom: 0.75rem;
   border-bottom: 2px solid var(--ink);

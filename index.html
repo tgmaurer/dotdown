@@ -40,6 +40,12 @@
     <p id="notice" class="notice" role="alert" hidden></p>
 
     <article id="view" hidden>
+      <!-- A small brand line, and a way to start over without opening Edit. -->
+      <div class="topbar">
+        <span class="brand"><img src="favicon.svg" alt="" width="16" height="16">Dwindle</span>
+        <button type="button" id="new-top" class="link">New countdown</button>
+      </div>
+
       <h1 id="name" class="name"></h1>
 
       <!-- role="timer" is not announced on every change; keep it that way. -->

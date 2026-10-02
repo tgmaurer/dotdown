@@ -16,6 +16,16 @@ Bookmark or share the link and you have saved or shared the countdown. Someone
 who opens your link gets their own copy: their edits change only their URL and
 their browser storage.
 
+**Nothing you enter is sent anywhere.** The countdown sits in the part of the
+link after `#`, which browsers never send to a server; the server only ever
+sees requests for the page, its stylesheet, script, icons and font. The app
+makes no other requests: no analytics, no third-party scripts or fonts, and
+no referrer is passed on when you follow a link. The only copies of your
+countdown are the link itself, wherever you put it, and this browser's own
+storage. (If `STATE_MODE` is switched to `'query'`, the countdown moves into
+the `?s=` part of the link, which *is* sent to the server, so that setting
+gives this up.)
+
 `localStorage` (`dwindle:last`) remembers the last countdown you created or
 edited, so opening the bare URL brings it back. It is a convenience only. The
 app works without storage (private mode).

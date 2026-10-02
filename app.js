@@ -747,12 +747,15 @@ $('edit-toggle').addEventListener('click', () => {
 
 // Starting over only clears the URL. Storage keeps the old countdown until a
 // new one is actually created, so "Back to ..." (or a reload) undoes this.
-$('f-new').addEventListener('click', () => {
+function startNew() {
   const current = encode(state);
   writeState('');
   showCreate('', current);
   nameInput.focus();
-});
+}
+
+$('f-new').addEventListener('click', startNew);
+$('new-top').addEventListener('click', startNew);
 
 $('f-back').addEventListener('click', () => {
   const previous = tryDecode(backTo);
