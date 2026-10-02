@@ -18,6 +18,7 @@
   --muted: #62625e;
   --faint: #d5d5d0; /* elapsed days */
   --accent: #cf2e1c; /* today, and things that need attention */
+  --warn: #f1c232; /* the "getting close" tag; same in light and dark */
   --radius: 2px;
 
   /* Keeps the layout still when the page scrollbar appears or disappears.
@@ -229,8 +230,9 @@ ul {
   margin-top: 0.75rem;
 }
 
-/* Final stretch (see isFinalStretch in app.js): the day number turns red and
-   a small tag says so in words, so the signal does not rely on colour alone. */
+/* Two warning stages (see stage() in app.js). "Getting close": a yellow tag,
+   nothing else changes. "Final stretch": the tag turns red and so does the
+   day number. The tag says it in words, so neither relies on colour alone. */
 .ticker.urgent .days .num {
   color: var(--accent);
 }
@@ -244,6 +246,13 @@ ul {
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+}
+
+/* Yellow needs dark text in both light and dark mode. Only the tag is
+   yellow: as a text colour on the light background it would be unreadable. */
+.soon.close {
+  background: var(--warn);
+  color: #1b1b1a;
 }
 
 .clock {

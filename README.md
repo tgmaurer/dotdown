@@ -40,7 +40,7 @@ JSON, encoded as UTF-8, then base64url without padding, placed after the `#`:
   "v": 1,
   "t": "Trip to Japan",
   "d": "2027-03-14",
-  "c": "2026-10-02",
+  "c": "2026-10-02T14:05",
   "g": [{ "t": "Book flights" }, { "t": "Learn 50 phrases" }]
 }
 ```
@@ -50,7 +50,7 @@ JSON, encoded as UTF-8, then base64url without padding, placed after the `#`:
 | `v` | Format version. Currently `1`. |
 | `t` | Name, up to 60 characters. |
 | `d` | Target date, plain `YYYY-MM-DD`. The countdown ends at local midnight at the start of this day. |
-| `c` | Creation date, plain `YYYY-MM-DD`. Set to the local date when the countdown is created and never changed by edits. The day grid starts here. |
+| `c` | Creation time, local, to the minute: `YYYY-MM-DDTHH:MM`. Set when the countdown is created and never changed by edits. The day grid starts on this day, and "% gone" is measured from this minute. A plain `YYYY-MM-DD` is also accepted and read as midnight. |
 | `g` | Goals, up to 20, each an object `{ "t": "..." }` of up to 120 characters. Objects rather than strings so that fields can be added later. |
 
 Links live forever, so every decoded payload goes through `migrate(payload)` in

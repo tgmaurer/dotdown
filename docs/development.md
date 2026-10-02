@@ -52,7 +52,9 @@ to that list as well.
 - [ ] iPad/iPhone: add to the home screen with a hash in place, open it from the icon, and confirm the countdown loads. If standalone mode drops the hash, flip `STATE_MODE` to `'query'` and retest.
 - [ ] iPad/iPhone: edit the countdown inside the home screen app, close the app completely, and open it from the icon again. The edit is still there.
 - [ ] Edit, then check the title updates and the URL updates. Press Done: the editor closes and the "re-bookmark" hint appears.
-- [ ] Final stretch: a countdown in the last tenth of its span (at most the last 7 days, at least the last day) shows the day number in red and the "Time is almost up" tag. One day earlier it does not.
+- [ ] Getting close: in the last quarter of its span (at most the last 30 days) a countdown shows a yellow "Getting close" tag.
+- [ ] Final stretch: in the last tenth of its span (at most the last 7 days, at least the last day) the tag turns red, reads "Time is almost up", and the day number turns red. One day earlier it does not.
+- [ ] "% gone" starts at 0% for a new countdown, rises during the day, and reads 100% only once the target is reached.
 - [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
 
 ## Domain

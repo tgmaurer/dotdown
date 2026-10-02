@@ -37,6 +37,8 @@ let dragged = null; // the goal row being dragged to a new place
 // Dates are plain "YYYY-MM-DD" strings. They only become Date objects at the
 // last moment, and never by adding milliseconds to another date (DST).
 
+const pad2 = (n) => String(n).padStart(2, '0');
+
 // "YYYY-MM-DD" -> { y, m, d }, or null if it is not a real calendar date.
 function parseDate(text) {
   const match = typeof text === 'string' && /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
@@ -51,8 +53,24 @@ function parseDate(text) {
 }
 
 function todayISO(now = new Date()) {
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  return `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
+}
+
+// The moment a countdown was created: "YYYY-MM-DDTHH:MM", local time, to the
+// minute. A plain date is accepted too and read as midnight.
+// Returns { day, minutes (after midnight), hasTime }, or null if unreadable.
+function parseCreated(text) {
+  const match = typeof text === 'string' && /^(\d{4}-\d{2}-\d{2})(?:T(\d{2}):(\d{2}))?$/.exec(text);
+  if (!match || !parseDate(match[1])) return null;
+  const hours = Number(match[2] || 0);
+  const minutes = Number(match[3] || 0);
+  if (hours > 23 || minutes > 59) return null;
+  return { day: match[1], minutes: hours * 60 + minutes, hasTime: match[2] !== undefined };
+}
+
+function nowStamp() {
+  const now = new Date();
+  return `${todayISO(now)}T${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
 }
 
 // Local midnight at the START of the given day.
@@ -121,7 +139,7 @@ function migrate(payload) {
 function normalize(payload) {
   const name = typeof payload.t === 'string' ? clip(payload.t.trim(), MAX_NAME) : '';
   if (!name) throw new Error('Missing name');
-  if (!parseDate(payload.d) || !parseDate(payload.c)) throw new Error('Bad date');
+  if (!parseDate(payload.d) || !parseCreated(payload.c)) throw new Error('Bad date');
   const goals = (Array.isArray(payload.g) ? payload.g : [])
     .map((goal) => (goal && typeof goal.t === 'string' ? clip(goal.t.trim(), MAX_GOAL) : ''))
     .filter(Boolean)
@@ -218,7 +236,7 @@ const targetFormat = new Intl.DateTimeFormat('en-GB', {
   minute: '2-digit',
 });
 
-// The start is a whole day (the day the countdown was created), so no time.
+// For a start that is only a date (a link without a creation time).
 const startFormat = new Intl.DateTimeFormat('en-GB', {
   weekday: 'short',
   day: 'numeric',
@@ -233,7 +251,11 @@ function render() {
   $('notice').hidden = true;
   $('view').hidden = false;
   $('name').textContent = state.t;
-  $('start').textContent = startFormat.format(localMidnight(state.c));
+  const created = parseCreated(state.c);
+  const { y, m, d } = parseDate(created.day);
+  $('start').textContent = (created.hasTime ? targetFormat : startFormat).format(
+    new Date(y, m - 1, d, 0, created.minutes)
+  );
   $('target').textContent = targetFormat.format(localMidnight(state.d));
 
   $('goals').hidden = state.g.length === 0;
@@ -262,14 +284,33 @@ function clockSecondsLeft(now, today) {
   return Math.max(0, daysAfterToday * 86400 + tonight);
 }
 
-// The final stretch: the last tenth of the whole span, but never more than the
-// last 7 days and never less than the last day. A 180-day countdown is in it
-// for its last week, a 30-day one for its last 3 days, a 5-day one for its
-// last day.
-function isFinalStretch(today) {
-  const span = Math.max(1, daysBetween(state.c, state.d));
-  const stretch = Math.min(7, Math.max(1, Math.round(span / 10)));
-  return daysBetween(today, state.d) <= stretch;
+// Calendar days from the creation day to the target day, at least 1.
+function spanDays() {
+  return Math.max(1, daysBetween(parseCreated(state.c).day, state.d));
+}
+
+// How near the end is: '' (normal), 'close' or 'final'.
+// final: the last tenth of the span, at most 7 days, at least the last day.
+// close: the last quarter of the span, at most 30 days.
+// A 180-day countdown is 'close' for its last 30 days and 'final' for its
+// last 7; a 30-day one for its last 8 and 3. A very short countdown has no
+// 'close' stage, because 'final' already covers it.
+function stage(today) {
+  const span = spanDays();
+  const left = daysBetween(today, state.d);
+  if (left <= Math.min(7, Math.max(1, Math.round(span / 10)))) return 'final';
+  if (left <= Math.min(30, Math.round(span / 4))) return 'close';
+  return '';
+}
+
+// How much of the span is gone, in percent, by the clock: from the minute the
+// countdown was created to the target. Rounded down, so it reads 100 only
+// once the target is reached.
+function percentGone(secondsLeft) {
+  const created = parseCreated(state.c);
+  const total = daysBetween(created.day, state.d) * 86400 - created.minutes * 60;
+  if (total <= 0) return 0; // created at or after the target
+  return Math.min(99, Math.max(0, Math.floor(((total - secondsLeft) / total) * 100)));
 }
 
 // Runs about once a second. Everything is derived from the clock on each run
@@ -294,25 +335,28 @@ function tick() {
   $('target-label').textContent = passed ? 'ended' : 'until';
 
   if (passed) {
+    $('percent').textContent = '100% gone';
     const ago = daysBetween(state.d, today);
     $('passed').textContent =
       ago < 1 ? 'Today is the day.' : `Deadline passed ${ago} ${ago === 1 ? 'day' : 'days'} ago`;
     return; // nothing left to count, so stop ticking
   }
 
-  const urgent = isFinalStretch(today);
-  $('ticker').classList.toggle('urgent', urgent);
-  $('soon').hidden = !urgent;
+  const phase = stage(today);
+  $('ticker').classList.toggle('urgent', phase === 'final');
+  $('soon').hidden = !phase;
+  $('soon').classList.toggle('close', phase === 'close');
+  $('soon').textContent = phase === 'close' ? 'Getting close' : 'Time is almost up';
 
   const seconds = clockSecondsLeft(now, today);
+  $('percent').textContent = `${percentGone(seconds)}% gone`;
   const days = Math.floor(seconds / 86400);
-  const pad = (n) => String(n).padStart(2, '0');
   $('t-days').textContent = days;
   $('t-days').classList.toggle('long', days > 99999);
   $('t-days-label').textContent = days === 1 ? 'day' : 'days';
-  $('t-hours').textContent = pad(Math.floor(seconds / 3600) % 24);
-  $('t-minutes').textContent = pad(Math.floor(seconds / 60) % 60);
-  $('t-seconds').textContent = pad(seconds % 60);
+  $('t-hours').textContent = pad2(Math.floor(seconds / 3600) % 24);
+  $('t-minutes').textContent = pad2(Math.floor(seconds / 60) % 60);
+  $('t-seconds').textContent = pad2(seconds % 60);
 
   // Wake up just after the clock reaches its next whole second.
   timer = setTimeout(tick, ((1000 - now.getMilliseconds()) % 1000) + 20);
@@ -320,7 +364,7 @@ function tick() {
 
 // One dot per calendar day from the creation date up to the target date.
 function renderDots(today) {
-  const total = Math.max(1, daysBetween(state.c, state.d)); // guards created >= target
+  const total = spanDays();
   const left = Math.min(total, Math.max(0, daysBetween(today, state.d)));
   const gone = total - left;
   const perDot = Math.ceil(total / MAX_DOTS);
@@ -341,7 +385,6 @@ function renderDots(today) {
   grid.replaceChildren(dots);
   grid.classList.toggle('few', count <= 90);
   grid.setAttribute('aria-label', `${gone} of ${total} days gone, ${left} left`);
-  $('percent').textContent = `${Math.floor((gone / total) * 100)}% gone`;
   $('scale').textContent = perDot > 1 ? `· each dot is ${perDot} days` : '';
 }
 
@@ -399,8 +442,8 @@ function formToState() {
     .filter(Boolean)
     .slice(0, MAX_GOALS)
     .map((t) => ({ t }));
-  // The creation date is set once, when the countdown is made, and then kept.
-  const created = state ? state.c : todayISO();
+  // The creation time is set once, when the countdown is made, and then kept.
+  const created = state ? state.c : nowStamp();
   return { v: VERSION, t: name, d: dateInput.value, c: created, g: goals };
 }
 
