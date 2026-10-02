@@ -30,6 +30,8 @@ let timer = 0; // id of the pending tick
 let shownDay = ''; // the day the dot grid was last drawn for
 let backTo = ''; // encoded countdown the create form can return to
 let iconLink = null; // home screen only: the link the icon was made from
+let pendingHint = ''; // hint text waiting for the editor to close
+let dragged = null; // the goal row being dragged to a new place
 
 // ---------- Dates ----------
 // Dates are plain "YYYY-MM-DD" strings. They only become Date objects at the
@@ -347,12 +349,16 @@ function addGoalRow(text) {
   input.placeholder = 'Book flights';
   input.setAttribute('aria-label', 'Goal');
   input.value = text;
+  const grip = document.createElement('button');
+  grip.type = 'button';
+  grip.className = 'grip';
+  grip.setAttribute('aria-label', 'Move goal: drag, or use the up and down arrow keys');
   const remove = document.createElement('button');
   remove.type = 'button';
   remove.className = 'remove';
   remove.textContent = '×';
   remove.setAttribute('aria-label', 'Remove goal');
-  row.append(input, remove);
+  row.append(grip, input, remove);
   goalRows.append(row);
   $('f-add').disabled = goalRows.children.length >= MAX_GOALS;
   return input;
@@ -381,7 +387,11 @@ function commit(next, created) {
   if (iconLink) saved = saveHomeEdit(encoded);
   state = next;
   render();
-  showHint(hintText(created, saved));
+  // While the editor is open the hint waits. It appears at the bottom of the
+  // screen, right where the Done button can be, and popping up between the
+  // press and the release of a click would swallow that click.
+  pendingHint = hintText(created, saved);
+  if (editor.hidden) showPendingHint();
 }
 
 // Saves the form while editing, if it is valid and something really changed.
@@ -401,12 +411,14 @@ function closeEditor() {
   editor.hidden = true;
   $('edit-toggle').textContent = 'Edit';
   $('edit-toggle').setAttribute('aria-expanded', 'false');
+  showPendingHint();
 }
 
 // ---------- The two screens ----------
 
 function showCountdown(next) {
   state = next;
+  pendingHint = ''; // a different link is being shown, the old hint is stale
   closeEditor();
   render();
 }
@@ -416,6 +428,7 @@ function showCountdown(next) {
 function showCreate(message, fallback) {
   clearTimeout(timer);
   state = null;
+  pendingHint = '';
   document.title = 'Dwindle';
   $('view').hidden = true;
   $('hint').hidden = true;
@@ -497,6 +510,12 @@ function hintText(created, saved) {
         ? 'Link created. Bookmark it to keep this countdown.'
         : 'Link updated. Re-bookmark to keep this version.';
   }
+}
+
+function showPendingHint() {
+  if (!pendingHint) return;
+  showHint(pendingHint);
+  pendingHint = '';
 }
 
 function showHint(text) {
@@ -586,6 +605,70 @@ goalRows.addEventListener('keydown', (event) => {
   if (nextRow) nextRow.querySelector('input').focus();
   else if (event.target.value.trim() && !$('f-add').disabled) addGoalRow('').focus();
   else event.target.blur();
+});
+
+// ---------- Reordering goals ----------
+// A goal is dragged by its grip, with mouse, finger or pen (Pointer Events).
+// The dragged row itself never moves in the page: its neighbours are moved
+// around it. That keeps the pointer attached to the grip for the whole drag.
+
+const middle = (row) => {
+  const box = row.getBoundingClientRect();
+  return box.top + box.height / 2;
+};
+
+goalRows.addEventListener('pointerdown', (event) => {
+  const grip = event.target.closest('.grip');
+  if (!grip || dragged) return;
+  // Leave any field being typed in first, so its text is saved before rows move.
+  if (editor.contains(document.activeElement)) document.activeElement.blur();
+  dragged = grip.parentElement;
+  dragged.classList.add('dragging');
+  grip.setPointerCapture(event.pointerId);
+});
+
+goalRows.addEventListener('pointermove', (event) => {
+  if (!dragged) return;
+  // Swap places with a neighbour once the pointer has passed its middle.
+  let above = dragged.previousElementSibling;
+  while (above && event.clientY < middle(above)) {
+    dragged.after(above);
+    above = dragged.previousElementSibling;
+  }
+  let below = dragged.nextElementSibling;
+  while (below && event.clientY > middle(below)) {
+    dragged.before(below);
+    below = dragged.nextElementSibling;
+  }
+  // Near the top or bottom edge of the screen, scroll, but only while more
+  // of the list lies beyond that edge. Lets a long list be crossed in one go.
+  const list = goalRows.getBoundingClientRect();
+  if (event.clientY < 48 && list.top < 0) scrollBy(0, -12);
+  else if (event.clientY > innerHeight - 48 && list.bottom > innerHeight) scrollBy(0, 12);
+});
+
+function endDrag() {
+  if (!dragged) return;
+  dragged.classList.remove('dragging');
+  dragged = null;
+  if (state) saveEdits();
+}
+
+goalRows.addEventListener('pointerup', endDrag);
+goalRows.addEventListener('pointercancel', endDrag);
+
+// Keyboard: with the grip focused, the arrow keys move the goal up or down.
+goalRows.addEventListener('keydown', (event) => {
+  if (!event.target.classList.contains('grip')) return;
+  const row = event.target.parentElement;
+  const other = event.key === 'ArrowUp' ? row.previousElementSibling
+    : event.key === 'ArrowDown' ? row.nextElementSibling
+    : null;
+  if (!other) return;
+  event.preventDefault();
+  if (event.key === 'ArrowUp') row.after(other);
+  else row.before(other);
+  if (state) saveEdits();
 });
 
 $('edit-toggle').addEventListener('click', () => {

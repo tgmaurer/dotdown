@@ -525,6 +525,47 @@ input::-webkit-date-and-time-value {
   min-width: 0;
 }
 
+/* Grip for dragging a goal to a new place. Its 44px tap area reaches into
+   the page gutter (the negative margin), so the three lines sit flush with
+   the left edge of the column and the text field keeps its width.
+   touch-action: none lets a finger drag it without scrolling the page. */
+.grip {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-left: -0.9375rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* The three lines: one drawn, two more as its shadows. */
+.grip::before {
+  content: "";
+  width: 0.875rem;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 -5px currentColor, 0 5px currentColor;
+}
+
+/* The row being dragged. */
+.dragging .grip {
+  color: var(--accent);
+  cursor: grabbing;
+}
+
+#f-goals .dragging input {
+  border-color: var(--accent);
+}
+
 .remove {
   flex: none;
   width: 2.75rem;
