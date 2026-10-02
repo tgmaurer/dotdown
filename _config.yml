@@ -1,0 +1,6 @@
+# GitHub Pages builds this branch with Jekyll before publishing it. The app
+# files are copied as they are; this list keeps repository-only files out of
+# the published site. Dotfiles (.gitignore) and this file are never published.
+exclude:
+  - README.md
+  - docs/
