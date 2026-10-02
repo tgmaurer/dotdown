@@ -107,7 +107,9 @@ body {
      enough to keep content clear of the fixed corner links, so short pages
      do not scroll for no reason. */
   padding:
-    max(var(--gutter), env(safe-area-inset-top))
+    /* A little extra on top keeps the first line clear of the phone's
+       translucent status bar. */
+    calc(max(var(--gutter), env(safe-area-inset-top)) + 0.5rem)
     var(--gutter-right) /* shrinks by the scrollbar's width, see :root */
     calc(4rem + env(safe-area-inset-bottom))
     max(var(--gutter), env(safe-area-inset-left));
@@ -170,12 +172,19 @@ ul {
 .intro h1 {
   padding-bottom: 0.75rem;
   border-bottom: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
   font-size: 2rem;
   font-weight: 700;
-  /*letter-spacing: -0.04em;*/
-  letter-spacing: -0.01em;
-  /* Increased letter spacing for better legibility */
   line-height: 1.1;
+}
+
+/* The app icon, about as tall as the capital letters beside it. */
+.intro h1 img {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 3px;
 }
 
 .intro p {
@@ -243,7 +252,9 @@ ul {
   display: block;
   margin-left: -0.04em; /* optical: lines the first digit up with the text */
   font-size: clamp(4.75rem, 27vw, 10rem);
-  letter-spacing: -0.06em;
+  /* Only a touch tighter: at this size even a monospace font looks loose,
+     but more than this and the digits start to crowd. */
+  letter-spacing: -0.03em;
   line-height: 0.9;
 }
 
@@ -305,8 +316,6 @@ ul {
   margin-top: 2rem;
   font-size: clamp(1.75rem, 8vw, 3rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  /* Maybe increase letter spacing for better legibility */
   line-height: 1.1;
 }
 
