@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- A tiny dot grid: four days gone, today, four days left. -->
+  <rect width="32" height="32" rx="7" fill="#1c1b18"/>
+  <g fill="#f4f1ea">
+    <g opacity="0.28">
+      <circle cx="8" cy="8" r="2.75"/>
+      <circle cx="16" cy="8" r="2.75"/>
+      <circle cx="24" cy="8" r="2.75"/>
+      <circle cx="8" cy="16" r="2.75"/>
+    </g>
+    <circle cx="24" cy="16" r="2.75"/>
+    <circle cx="8" cy="24" r="2.75"/>
+    <circle cx="16" cy="24" r="2.75"/>
+    <circle cx="24" cy="24" r="2.75"/>
+  </g>
+  <circle cx="16" cy="16" r="2.75" fill="#f08a4b"/>
+</svg>

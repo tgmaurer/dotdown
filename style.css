@@ -1,0 +1,455 @@
+/* Dwindle. One serif family from the system, one accent colour, lots of air. */
+
+:root {
+  --bg: #f4f1ea;
+  --ink: #1c1b18;
+  --muted: #666156;
+  --faint: #d6d0c2; /* elapsed dots, hairlines */
+  --accent: #b83a0a;
+
+  /* System fonts only. Georgia is left out on purpose: its old-style
+     figures look uneven at countdown size. */
+  --serif: ui-serif, "New York", "Iowan Old Style", "Palatino Linotype",
+    Palatino, "Noto Serif", serif;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161512;
+    --ink: #ece8df;
+    --muted: #a39d90;
+    --faint: #3b382f;
+    --accent: #f08a4b;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Several elements below set `display`, which would otherwise beat [hidden]. */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  /* Safe-area insets for notched phones (needs viewport-fit=cover).
+     The bottom padding keeps content clear of the fixed corner and hint. */
+  padding:
+    max(2.5rem, env(safe-area-inset-top))
+    max(1.25rem, env(safe-area-inset-right))
+    calc(8rem + env(safe-area-inset-bottom))
+    max(1.25rem, env(safe-area-inset-left));
+  background: var(--bg);
+  color: var(--ink);
+  font: 1.0625rem/1.5 var(--serif);
+}
+
+main {
+  max-width: 38rem;
+  margin: 0 auto;
+}
+
+h1,
+h2,
+p,
+ul,
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Small caps-style labels used for field names and section titles. */
+.label,
+.unit {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* ---------- Intro and notice (create state) ---------- */
+
+.intro h1 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.intro p {
+  margin-top: 0.75rem;
+  color: var(--muted);
+}
+
+.notice {
+  margin-top: 1.5rem;
+  padding-left: 0.875rem;
+  border-left: 2px solid var(--accent);
+}
+
+/* ---------- Countdown ---------- */
+
+.name {
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.ticker {
+  margin-top: 2rem;
+}
+
+/* tabular-nums gives every digit the same width, so nothing jitters. */
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.days .num {
+  display: block;
+  font-size: clamp(5.5rem, 30vw, 11rem);
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+/* Six or more digits (centuries away): shrink so the number still fits. */
+.days .num.long {
+  font-size: clamp(2.75rem, 13vw, 6rem);
+}
+
+.days .unit {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+.clock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.clock > span {
+  white-space: nowrap;
+}
+
+.clock .num {
+  font-size: 1.625rem;
+}
+
+.passed {
+  margin-top: 2rem;
+  font-size: clamp(2rem, 9vw, 3.25rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.target {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Dot grid ---------- */
+
+.span {
+  margin-top: 2.75rem;
+}
+
+.dots {
+  --dot: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--dot));
+  gap: calc(var(--dot) * 0.625);
+}
+
+/* Short spans get bigger dots so the grid does not look lost. */
+.dots.few {
+  --dot: 0.875rem;
+}
+
+.dots i {
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 50%;
+  background: var(--ink); /* a day still to come */
+}
+
+.dots .gone {
+  background: var(--faint);
+}
+
+.dots .today {
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dots .today {
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.caption {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.caption strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- Goals ---------- */
+
+.goals {
+  margin-top: 2.75rem;
+}
+
+.goals ul {
+  margin-top: 0.5rem;
+}
+
+.goals li {
+  position: relative;
+  padding: 0.25rem 0 0.25rem 1.375rem;
+  overflow-wrap: anywhere;
+}
+
+.goals li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+}
+
+/* ---------- Buttons and links ---------- */
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* Text-style button. min-height/min-width keep the tap target at 44px. */
+.link {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  text-align: left; /* short labels ("Edit") stay flush with the column */
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+.link:hover {
+  color: var(--ink);
+}
+
+.primary {
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.actions {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+/* ---------- Form ---------- */
+
+.editor {
+  margin-top: 2rem;
+}
+
+/* While editing, the form sits under the countdown: separate it with a rule. */
+#view:not([hidden]) ~ .editor {
+  margin-top: 0.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--faint);
+}
+
+.field {
+  margin-bottom: 1.5rem;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  display: block;
+  padding: 0;
+}
+
+input {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.25rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--muted);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  /* Inherit the serif, but never go below 16px or iOS zooms in on focus. */
+  font: inherit;
+  font-size: max(1rem, 16px);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+input:focus-visible {
+  outline: 0;
+  border-bottom: 2px solid var(--accent);
+}
+
+/* iOS centres the value of a date input by default. */
+input::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+#f-goals li {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+#f-goals input {
+  flex: 1;
+  min-width: 0;
+}
+
+.remove {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 1.375rem;
+  line-height: 1;
+}
+
+.remove:hover {
+  color: var(--accent);
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+}
+
+/* ---------- Hint (after an edit) ---------- */
+
+.hint {
+  position: fixed;
+  left: 50%;
+  bottom: calc(3.5rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(100% - 2rem, 32rem);
+  padding: 0.25rem 0.25rem 0.25rem 1rem;
+  border-radius: 0.375rem;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+
+.hint span {
+  flex: 1;
+  padding: 0.5rem 0;
+}
+
+.hint .link,
+.hint .link:hover {
+  flex: none;
+  color: inherit;
+}
+
+#hint-close {
+  font-size: 1.375rem;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* ---------- Corner slot and ad slot ---------- */
+
+#corner {
+  position: fixed;
+  right: max(0.5rem, env(safe-area-inset-right));
+  bottom: max(0.25rem, env(safe-area-inset-bottom));
+  display: flex;
+  border-radius: 0.375rem;
+  background: var(--bg); /* so page text never shows through the links */
+  font-size: 0.8125rem;
+}
+
+#corner a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 0.625rem;
+  color: var(--muted);
+  text-underline-offset: 0.25em;
+}
+
+#corner a:hover {
+  color: var(--ink);
+}
+
+.ad {
+  max-width: 38rem;
+  margin: 3rem auto 0;
+}

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dwindle</title>
+  <meta name="description" content="A countdown to one date. The whole thing lives in the link.">
+
+  <!-- The link holds the user's goals, so never send it anywhere as a referrer. -->
+  <meta name="referrer" content="no-referrer">
+
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161512" media="(prefers-color-scheme: dark)">
+
+  <!-- Home screen. Deliberately NO web app manifest: its start_url could
+       replace the current URL and drop the state that lives in it. -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Dwindle">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main>
+    <!-- Shown only while there is no countdown yet. -->
+    <header id="intro" class="intro" hidden>
+      <h1>Dwindle</h1>
+      <p>Six months feels far. 180 days doesn’t. Name a date and watch it shrink.</p>
+    </header>
+
+    <p id="notice" class="notice" role="alert" hidden></p>
+
+    <article id="view" hidden>
+      <h1 id="name" class="name"></h1>
+
+      <!-- role="timer" is not announced on every change; keep it that way. -->
+      <div id="ticker" class="ticker" role="timer" aria-live="off">
+        <p class="days">
+          <span id="t-days" class="num">0</span>
+          <span id="t-days-label" class="unit">days</span>
+        </p>
+        <p class="clock">
+          <span><span id="t-hours" class="num">00</span> <span class="unit">hours</span></span>
+          <span><span id="t-minutes" class="num">00</span> <span class="unit">minutes</span></span>
+          <span><span id="t-seconds" class="num">00</span> <span class="unit">seconds</span></span>
+        </p>
+      </div>
+      <p id="passed" class="passed" hidden></p>
+      <p id="target" class="target"></p>
+
+      <section class="span" aria-label="How much time is gone">
+        <div id="dots" class="dots" role="img"></div>
+        <p class="caption"><strong id="percent"></strong> <span id="scale"></span></p>
+      </section>
+
+      <section id="goals" class="goals" aria-labelledby="goals-title" hidden>
+        <h2 id="goals-title" class="label">Goals</h2>
+        <ul id="goal-list"></ul>
+      </section>
+
+      <p class="actions">
+        <button type="button" id="edit-toggle" class="link" aria-expanded="false" aria-controls="editor">Edit</button>
+        <button type="button" id="copy" class="link">Copy link</button>
+      </p>
+    </article>
+
+    <!-- One form for both creating and editing. Validation runs in app.js. -->
+    <form id="editor" class="editor" novalidate hidden>
+      <div class="field">
+        <label for="f-name" class="label">Name</label>
+        <input id="f-name" type="text" maxlength="60" required autocomplete="off" placeholder="Trip to Japan">
+      </div>
+      <div class="field">
+        <label for="f-date" class="label">Date</label>
+        <input id="f-date" type="date" required max="9999-12-31" placeholder="YYYY-MM-DD">
+      </div>
+      <fieldset class="field">
+        <legend class="label">Goals (optional)</legend>
+        <ul id="f-goals"></ul>
+        <button type="button" id="f-add" class="link">Add a goal</button>
+      </fieldset>
+      <p class="form-actions">
+        <button type="submit" id="f-submit" class="primary">Start countdown</button>
+        <button type="button" id="f-new" class="link" hidden>New countdown</button>
+        <button type="button" id="f-back" class="link" hidden></button>
+      </p>
+    </form>
+
+    <noscript><p class="notice">Dwindle needs JavaScript to count down.</p></noscript>
+  </main>
+
+  <!-- Quiet, non-blocking hint shown after an edit. -->
+  <div id="hint" class="hint" hidden>
+    <span id="hint-text" role="status"></span>
+    <button type="button" id="hint-copy" class="link">Copy link</button>
+    <button type="button" id="hint-close" class="link" aria-label="Dismiss">×</button>
+  </div>
+
+  <!--
+    Reserved ad slot: empty, hidden, and with no scripts in v1.
+    Any future ad MUST be isolated in a sandboxed <iframe>. A third-party
+    script running in this page can read location.hash (and the query string),
+    which would leak the user's countdown name and goals.
+  -->
+  <div id="ad" class="ad" hidden></div>
+
+  <!-- Placeholder links: replace every #TODO href. -->
+  <aside id="corner" aria-label="More">
+    <a href="#TODO" rel="noopener noreferrer">More by me</a>
+    <a href="#TODO" rel="noopener noreferrer">Buy me a coffee</a>
+  </aside>
+</body>
+</html>
