@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- A tiny dot grid: four days gone, today, four days left. -->
-  <rect width="32" height="32" rx="7" fill="#1c1b18"/>
-  <g fill="#f4f1ea">
-    <g opacity="0.28">
-      <circle cx="8" cy="8" r="2.75"/>
-      <circle cx="16" cy="8" r="2.75"/>
-      <circle cx="24" cy="8" r="2.75"/>
-      <circle cx="8" cy="16" r="2.75"/>
-    </g>
-    <circle cx="24" cy="16" r="2.75"/>
-    <circle cx="8" cy="24" r="2.75"/>
-    <circle cx="16" cy="24" r="2.75"/>
-    <circle cx="24" cy="24" r="2.75"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <!-- A tiny day grid: four days gone, today (red), four days left. -->
+  <rect width="36" height="36" rx="3" fill="#141413"/>
+  <g fill="#4a4a47">
+    <rect x="6" y="6" width="6" height="6" rx="0.6"/>
+    <rect x="15" y="6" width="6" height="6" rx="0.6"/>
+    <rect x="24" y="6" width="6" height="6" rx="0.6"/>
+    <rect x="6" y="15" width="6" height="6" rx="0.6"/>
   </g>
-  <circle cx="16" cy="16" r="2.75" fill="#f08a4b"/>
+  <rect x="15" y="15" width="6" height="6" rx="0.6" fill="#ff6a55"/>
+  <g fill="#ecece8">
+    <rect x="24" y="15" width="6" height="6" rx="0.6"/>
+    <rect x="6" y="24" width="6" height="6" rx="0.6"/>
+    <rect x="15" y="24" width="6" height="6" rx="0.6"/>
+    <rect x="24" y="24" width="6" height="6" rx="0.6"/>
+  </g>
 </svg>

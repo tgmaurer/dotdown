@@ -1,27 +1,29 @@
-/* Dwindle. One serif family from the system, one accent colour, lots of air. */
+/* Dwindle. Near-black on off-white, one monospace family from the system,
+   barely rounded corners, and a single red accent that marks today. */
 
 :root {
-  --bg: #f4f1ea;
-  --ink: #1c1b18;
-  --muted: #666156;
-  --faint: #d6d0c2; /* elapsed dots, hairlines */
-  --accent: #b83a0a;
+  --bg: #f5f5f2;
+  --ink: #1b1b1a;
+  --muted: #62625e;
+  --faint: #d5d5d0; /* elapsed days */
+  --accent: #cf2e1c; /* today, and things that need attention */
+  --radius: 2px;
 
-  /* System fonts only. Georgia is left out on purpose: its old-style
-     figures look uneven at countdown size. */
-  --serif: ui-serif, "New York", "Iowan Old Style", "Palatino Linotype",
-    Palatino, "Noto Serif", serif;
+  /* System fonts only. Every digit in a monospace font has the same width,
+     so the ticking numbers cannot jitter. */
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "Cascadia Mono", "Roboto Mono", "Liberation Mono", monospace;
 
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #161512;
-    --ink: #ece8df;
-    --muted: #a39d90;
-    --faint: #3b382f;
-    --accent: #f08a4b;
+    --bg: #141413;
+    --ink: #ecece8;
+    --muted: #a2a29d;
+    --faint: #3a3a37;
+    --accent: #ff6a55;
   }
 }
 
@@ -48,11 +50,11 @@ body {
   padding:
     max(2.5rem, env(safe-area-inset-top))
     max(1.25rem, env(safe-area-inset-right))
-    calc(8rem + env(safe-area-inset-bottom))
+    calc(10rem + env(safe-area-inset-bottom))
     max(1.25rem, env(safe-area-inset-left));
   background: var(--bg);
   color: var(--ink);
-  font: 1.0625rem/1.5 var(--serif);
+  font: 0.9375rem/1.6 var(--mono);
 }
 
 main {
@@ -74,11 +76,11 @@ ul {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
 
-/* Small caps-style labels used for field names and section titles. */
+/* Small uppercase labels used for field names, units and section titles. */
 .label,
 .unit {
   color: var(--muted);
@@ -91,29 +93,35 @@ ul {
 /* ---------- Intro and notice (create state) ---------- */
 
 .intro h1 {
-  font-size: 2.5rem;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ink);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 1.1;
 }
 
 .intro p {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   color: var(--muted);
 }
 
 .notice {
   margin-top: 1.5rem;
-  padding-left: 0.875rem;
-  border-left: 2px solid var(--accent);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--faint);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
 }
 
 /* ---------- Countdown ---------- */
 
 .name {
-  font-size: 1.375rem;
-  font-weight: 600;
-  line-height: 1.25;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ink);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
@@ -121,21 +129,22 @@ ul {
   margin-top: 2rem;
 }
 
-/* tabular-nums gives every digit the same width, so nothing jitters. */
 .num {
-  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .days .num {
   display: block;
-  font-size: clamp(5.5rem, 30vw, 11rem);
-  letter-spacing: -0.04em;
+  margin-left: -0.04em; /* optical: lines the first digit up with the text */
+  font-size: clamp(4.75rem, 27vw, 10rem);
+  letter-spacing: -0.06em;
   line-height: 0.9;
 }
 
 /* Six or more digits (centuries away): shrink so the number still fits. */
 .days .num.long {
-  font-size: clamp(2.75rem, 13vw, 6rem);
+  font-size: clamp(2.5rem, 12vw, 5.5rem);
 }
 
 .days .unit {
@@ -146,7 +155,7 @@ ul {
 .clock {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1.25rem;
+  gap: 0.25rem 1rem;
   margin-top: 1.25rem;
 }
 
@@ -155,26 +164,27 @@ ul {
 }
 
 .clock .num {
-  font-size: 1.625rem;
+  font-size: 1.5rem;
 }
 
 .passed {
   margin-top: 2rem;
-  font-size: clamp(2rem, 9vw, 3.25rem);
-  letter-spacing: -0.02em;
+  font-size: clamp(1.75rem, 8vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 1.1;
 }
 
 .target {
   margin-top: 1rem;
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
 }
 
-/* ---------- Dot grid ---------- */
+/* ---------- Day grid (one square per day) ---------- */
 
 .span {
-  margin-top: 2.75rem;
+  margin-top: 2.5rem;
 }
 
 .dots {
@@ -184,7 +194,7 @@ ul {
   gap: calc(var(--dot) * 0.625);
 }
 
-/* Short spans get bigger dots so the grid does not look lost. */
+/* Short spans get bigger squares so the grid does not look lost. */
 .dots.few {
   --dot: 0.875rem;
 }
@@ -192,46 +202,55 @@ ul {
 .dots i {
   width: var(--dot);
   height: var(--dot);
-  border-radius: 50%;
+  border-radius: 1px;
   background: var(--ink); /* a day still to come */
+}
+
+.dots.few i {
+  border-radius: var(--radius);
 }
 
 .dots .gone {
   background: var(--faint);
 }
 
+/* Today: the one coloured square, with a thin frame, slowly breathing. */
 .dots .today {
   background: var(--accent);
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent);
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .dots .today {
-    animation: pulse 2.4s ease-in-out infinite;
+    animation: breathe 2.4s ease-in-out infinite;
   }
 }
 
-@keyframes pulse {
+@keyframes breathe {
   50% {
-    opacity: 0.45;
+    opacity: 0.35;
   }
 }
 
 .caption {
   margin-top: 1rem;
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
 }
 
 .caption strong {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* ---------- Goals ---------- */
 
 .goals {
-  margin-top: 2.75rem;
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink);
+  counter-reset: goal;
 }
 
 .goals ul {
@@ -240,12 +259,14 @@ ul {
 
 .goals li {
   position: relative;
-  padding: 0.25rem 0 0.25rem 1.375rem;
+  padding: 0.25rem 0 0.25rem 2.25rem;
   overflow-wrap: anywhere;
+  counter-increment: goal;
 }
 
+/* Numbered 01, 02, ... */
 .goals li::before {
-  content: "–";
+  content: counter(goal, decimal-leading-zero);
   position: absolute;
   left: 0;
   color: var(--muted);
@@ -271,30 +292,40 @@ button:disabled {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.09em;
   text-align: left; /* short labels ("Edit") stay flush with the column */
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.25em;
+  text-transform: uppercase;
+  text-underline-offset: 0.3em;
 }
 
 .link:hover {
-  color: var(--ink);
+  text-decoration-thickness: 2px;
 }
 
 .primary {
   min-height: 2.75rem;
   padding: 0 1.25rem;
-  border: 0;
-  border-radius: 0.25rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
   background: var(--ink);
   color: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.primary:hover {
+  background: var(--bg);
+  color: var(--ink);
 }
 
 .actions {
   display: flex;
-  gap: 1.25rem;
+  gap: 1.5rem;
   margin-top: 2rem;
 }
 
@@ -308,7 +339,7 @@ button:disabled {
 #view:not([hidden]) ~ .editor {
   margin-top: 0.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--faint);
+  border-top: 1px solid var(--ink);
 }
 
 .field {
@@ -319,6 +350,7 @@ button:disabled {
 .field label,
 .field legend {
   display: block;
+  margin-bottom: 0.375rem;
   padding: 0;
 }
 
@@ -326,13 +358,12 @@ input {
   display: block;
   width: 100%;
   min-height: 2.75rem;
-  padding: 0.25rem 0;
-  border: 0;
-  border-bottom: 1px solid var(--muted);
-  border-radius: 0;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
   background: transparent;
   color: var(--ink);
-  /* Inherit the serif, but never go below 16px or iOS zooms in on focus. */
+  /* Inherit the font, but never go below 16px or iOS zooms in on focus. */
   font: inherit;
   font-size: max(1rem, 16px);
   -webkit-appearance: none;
@@ -345,8 +376,7 @@ input::placeholder {
 }
 
 input:focus-visible {
-  outline: 0;
-  border-bottom: 2px solid var(--accent);
+  outline-offset: 0;
 }
 
 /* iOS centres the value of a date input by default. */
@@ -358,6 +388,7 @@ input::-webkit-date-and-time-value {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 #f-goals input {
@@ -385,7 +416,7 @@ input::-webkit-date-and-time-value {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 1.25rem;
+  gap: 0.5rem 1.5rem;
 }
 
 /* ---------- Hint (after an edit) ---------- */
@@ -398,13 +429,13 @@ input::-webkit-date-and-time-value {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  width: min(100% - 2rem, 32rem);
+  width: min(100% - 2rem, 36rem);
   padding: 0.25rem 0.25rem 0.25rem 1rem;
-  border-radius: 0.375rem;
+  border-radius: var(--radius);
   background: var(--ink);
   color: var(--bg);
-  font-size: 0.9375rem;
-  line-height: 1.35;
+  font-size: 0.8125rem;
+  line-height: 1.4;
 }
 
 .hint span {
@@ -412,10 +443,8 @@ input::-webkit-date-and-time-value {
   padding: 0.5rem 0;
 }
 
-.hint .link,
-.hint .link:hover {
+.hint .link {
   flex: none;
-  color: inherit;
 }
 
 #hint-close {
@@ -431,9 +460,9 @@ input::-webkit-date-and-time-value {
   right: max(0.5rem, env(safe-area-inset-right));
   bottom: max(0.25rem, env(safe-area-inset-bottom));
   display: flex;
-  border-radius: 0.375rem;
+  border-radius: var(--radius);
   background: var(--bg); /* so page text never shows through the links */
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
 }
 
 #corner a {
@@ -442,7 +471,7 @@ input::-webkit-date-and-time-value {
   min-height: 2.75rem;
   padding: 0 0.625rem;
   color: var(--muted);
-  text-underline-offset: 0.25em;
+  text-underline-offset: 0.3em;
 }
 
 #corner a:hover {
