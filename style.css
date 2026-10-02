@@ -20,6 +20,21 @@
   --accent: #cf2e1c; /* today, and things that need attention */
   --radius: 2px;
 
+  /* Keeps the layout still when the page scrollbar appears or disappears.
+     --scrollbar-width is the viewport with the scrollbar (100vw) minus the
+     viewport without it (100%): 0 when there is no scrollbar, or when it
+     floats over the page as on phones. The 100% is worked out where the
+     variable is used, so it is only right in body's padding and in
+     position: fixed elements, where 100% means the viewport width.
+     --gutter-right is the right-hand gutter with the scrollbar taken out of
+     it: the scrollbar uses up gutter instead of pushing the content. */
+  --gutter: 1.25rem; /* space between the content and the edge of the screen */
+  --scrollbar-width: calc(100vw - 100%);
+  --gutter-right: max(
+    0px,
+    calc(max(var(--gutter), env(safe-area-inset-right)) - var(--scrollbar-width))
+  );
+
   /* Every digit in a monospace font has the same width, so the ticking
      numbers cannot jitter. The system fonts are only the fallback while
      Commit Mono loads, or if it fails to. */
@@ -91,10 +106,10 @@ body {
      enough to keep content clear of the fixed corner links, so short pages
      do not scroll for no reason. */
   padding:
-    max(1.25rem, env(safe-area-inset-top))
-    max(1.25rem, env(safe-area-inset-right))
+    max(var(--gutter), env(safe-area-inset-top))
+    var(--gutter-right) /* shrinks by the scrollbar's width, see :root */
     calc(4rem + env(safe-area-inset-bottom))
-    max(1.25rem, env(safe-area-inset-left));
+    max(var(--gutter), env(safe-area-inset-left));
   background: var(--bg);
   color: var(--ink);
   font: 0.9375rem/1.6 var(--mono);
@@ -509,13 +524,15 @@ input::-webkit-date-and-time-value {
 
 .hint {
   position: fixed;
-  left: 50%;
+  /* vw, not %: centred on the whole viewport like the page content, so it
+     does not move when a scrollbar appears. */
+  left: 50vw;
   bottom: calc(3.5rem + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  width: min(100% - 2rem, 36rem);
+  width: min(100vw - 2 * var(--gutter), 36rem);
   padding: 0.25rem 0.25rem 0.25rem 1rem;
   border-radius: var(--radius);
   background: var(--ink);
@@ -543,7 +560,7 @@ input::-webkit-date-and-time-value {
 
 #corner {
   position: fixed;
-  right: max(0.5rem, env(safe-area-inset-right));
+  right: var(--gutter-right); /* lines up with the content's right edge */
   bottom: max(0.25rem, env(safe-area-inset-bottom));
   display: flex;
   border-radius: var(--radius);
@@ -558,6 +575,11 @@ input::-webkit-date-and-time-value {
   padding: 0 0.625rem;
   color: var(--muted);
   text-underline-offset: 0.3em;
+}
+
+/* No padding after the last link, so its text ends exactly at the gutter. */
+#corner a:last-child {
+  padding-right: 0;
 }
 
 @media (hover: hover) {
