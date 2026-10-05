@@ -147,10 +147,14 @@
   -->
   <div id="ad" class="ad" hidden></div>
 
-  <!-- Links open in a new tab, so the countdown stays open. Shown on the
-       create page only; a countdown shows them under "More". -->
+  <!-- Shown on the create page only; a countdown shows them under "More".
+       Privacy opens in the same tab, so Back (or its "Back to Dwindle")
+       returns to the countdown; that also avoids the separate browser sheet
+       a new tab opens over a home screen app. It passes on only the site's
+       address as referrer, so the privacy page can tell it came from here.
+       GitHub links open in a new tab, so the countdown stays open. -->
   <aside id="corner" aria-label="More">
-    <a href="privacy.html" target="_blank" rel="noopener">Privacy</a>
+    <a href="privacy.html" referrerpolicy="origin">Privacy</a>
     <a href="https://github.com/tgmaurer/dwindle" target="_blank" rel="noopener noreferrer">Source</a>
     <a href="https://github.com/tgmaurer" target="_blank" rel="noopener noreferrer">More by me</a>
     <!-- Not live yet. Put the real address in place of #TODO, then uncomment:

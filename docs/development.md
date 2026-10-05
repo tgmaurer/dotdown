@@ -100,7 +100,7 @@ reach them.
 - [ ] Deploy a visible change: the first launch afterwards still shows the old version, the second the new one.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.
 - [ ] Press Edit on a phone: the page scrolls down to the form.
-- [ ] "Privacy" in the corner opens the privacy page in a new tab.
+- [ ] "Privacy" (corner or More menu) opens the privacy page in the same tab, with no white flash in dark mode. "Back to Dwindle" and the browser's Back both return to the same countdown, also in the home screen app.
 - [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
 
 ## Domain

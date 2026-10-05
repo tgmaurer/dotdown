@@ -58,7 +58,19 @@
       <p>Dwindle is a personal project by Timothy Maurer. Questions are welcome on <a href="https://github.com/tgmaurer/dwindle/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
     </section>
 
-    <p class="updated">Last updated 5 October 2026 · <a href="./">Open Dwindle</a></p>
+    <p class="updated">Last updated 5 October 2026 · <a id="back" href="./">Back to Dwindle</a></p>
   </main>
+
+  <script>
+    // Came here from Dwindle: step back, so the countdown that linked here
+    // returns exactly (with several home screen icons, the bare address could
+    // bring back a different one). Otherwise the link just opens Dwindle.
+    document.getElementById('back').addEventListener('click', (event) => {
+      if (document.referrer.startsWith(location.origin) && history.length > 1) {
+        event.preventDefault();
+        history.back();
+      }
+    });
+  </script>
 </body>
 </html>
