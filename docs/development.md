@@ -56,6 +56,11 @@ deploy reaches a device on its **second** launch after the deploy, not the first
 updated" date) whenever the app starts storing or sending something new, or
 the hosting changes.
 
+The only contact given there is GitHub issues. Adding an email address could
+make sense later: an issue is public and needs a GitHub account, and someone
+with a privacy question may want neither. It becomes more relevant once the
+"Buy me a coffee" link goes live.
+
 ## Manual test checklist
 
 - [ ] Create a countdown, reload the page, and the hash and view persist.
