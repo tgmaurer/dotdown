@@ -372,6 +372,20 @@ function milestone(share) {
   return '';
 }
 
+// The tab title while the tab is in the background: "3d 12h 58m · Trip to
+// Japan". To the minute, because browsers slow a background tab's timers to
+// about once a minute; seconds would freeze and jump.
+function backgroundTitle(seconds) {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor(seconds / 3600) % 24;
+  const minutes = Math.floor(seconds / 60) % 60;
+  let left = `${minutes}m`;
+  if (days) left = `${days}d ${hours}h ${left}`;
+  else if (hours) left = `${hours}h ${left}`;
+  else if (!minutes) left = '<1m';
+  return `${left} · ${state.t}`;
+}
+
 // Runs about once a second. Everything is derived from the clock on each run
 // (never from a counter), so a tab that slept in the background cannot drift.
 function tick() {
@@ -394,6 +408,7 @@ function tick() {
   $('target-label').textContent = passed ? 'ended' : 'until';
 
   if (passed) {
+    document.title = state.t;
     $('percent').textContent = '100% gone';
     $('milestone').textContent = '';
     const ago = daysBetween(state.d, today);
@@ -413,6 +428,7 @@ function tick() {
   $('percent').textContent = percentText(share);
   const mark = milestone(share);
   $('milestone').textContent = mark ? `· ${mark}` : '';
+  document.title = document.hidden ? backgroundTitle(seconds) : state.t;
   const days = Math.floor(seconds / 86400);
   $('t-days').textContent = days;
   $('t-days').classList.toggle('long', days > 99999);
@@ -917,10 +933,9 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
-// Timers are throttled in background tabs, so catch up the moment we are back.
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) tick();
-});
+// Timers are throttled in background tabs, so catch up the moment we are
+// back. Also switches the tab title between the name and the time left.
+document.addEventListener('visibilitychange', tick);
 
 // Keep the app's files on the device for fast, offline launches (see sw.js).
 // Not available on file:// or plain http other than localhost; that is fine.
