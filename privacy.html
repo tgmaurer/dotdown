@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Zooming is off here too, to match the app (see index.html). -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Privacy · Dwindle</title>
+  <meta name="description" content="Dwindle collects nothing. What stays on your device, and what the host logs.">
+  <meta name="referrer" content="no-referrer">
+
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f5f5f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <link rel="preload" href="fonts/CommitMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <h1><img src="favicon.svg" alt="" width="24" height="24">Privacy</h1>
+      <p>Dwindle collects nothing. No accounts, no cookies, no analytics, no ads, no trackers.</p>
+    </header>
+
+    <section>
+      <h2 class="label">Your countdown lives in the link</h2>
+      <p>The name, the date and the goals are stored in the link itself, after the <code>#</code>. Browsers never send that part to a server, so it never reaches the host or me. Anyone you give the link to can read it, so share it the way you would share the goals themselves.</p>
+    </section>
+
+    <section>
+      <h2 class="label">What stays on your device</h2>
+      <p>Your browser keeps the last countdown you opened, so the bare address can bring it back. A countdown saved to the home screen also remembers its latest edits there. The browser also keeps a copy of the app’s files so Dwindle opens quickly and works offline. All of this stays in your browser and is never sent anywhere. Clearing the website data for this site in your browser’s settings removes it.</p>
+    </section>
+
+    <section>
+      <h2 class="label">Hosting</h2>
+      <p>Dwindle is hosted on GitHub Pages. When you open it, GitHub logs your IP address for security reasons. GitHub does this, not Dwindle, and I cannot see those logs. See <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener noreferrer">GitHub Pages: data collection</a> and the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a>.</p>
+      <p>The font is served with the app, so no other server is contacted. The “Source” and “More by me” links lead to GitHub, where GitHub’s own privacy statement applies.</p>
+    </section>
+
+    <section>
+      <h2 class="label">Contact</h2>
+      <p>Dwindle is a personal project by Timothy Maurer. Questions are welcome on <a href="https://github.com/tgmaurer/dwindle/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+    </section>
+
+    <p class="updated">Last updated 5 October 2026 · <a href="./">Open Dwindle</a></p>
+  </main>
+</body>
+</html>

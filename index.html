@@ -66,7 +66,7 @@
       <p id="passed" class="passed" hidden></p>
       <dl class="dates">
         <div><dt>from</dt><dd id="start"></dd></div>
-        <div><dt id="target-label">until</dt><dd><span id="target"></span> <span class="together">(your local time)</span></dd></div>
+        <div><dt id="target-label">until</dt><dd id="target"></dd></div>
       </dl>
 
       <section class="span" aria-label="How much time is gone">
@@ -79,10 +79,16 @@
         <ul id="goal-list"></ul>
       </section>
 
-      <p class="actions">
+      <div class="actions">
         <button type="button" id="edit-toggle" class="link" aria-expanded="false" aria-controls="editor">Edit</button>
         <button type="button" id="copy" class="link">Copy link</button>
-      </p>
+        <!-- The corner links, folded away so the countdown fits on one screen.
+             app.js copies them in from #corner, which is hidden here. -->
+        <div class="more">
+          <button type="button" id="more-toggle" class="link" aria-expanded="false" aria-controls="more-menu">More</button>
+          <div id="more-menu" class="menu" hidden></div>
+        </div>
+      </div>
     </article>
 
     <!-- One form for both creating and editing. Validation runs in app.js. -->
@@ -125,8 +131,10 @@
   -->
   <div id="ad" class="ad" hidden></div>
 
-  <!-- Links open in a new tab, so the countdown stays open. -->
+  <!-- Links open in a new tab, so the countdown stays open. Shown on the
+       create page only; a countdown shows them under "More". -->
   <aside id="corner" aria-label="More">
+    <a href="privacy.html" target="_blank" rel="noopener">Privacy</a>
     <a href="https://github.com/tgmaurer/dwindle" target="_blank" rel="noopener noreferrer">Source</a>
     <a href="https://github.com/tgmaurer" target="_blank" rel="noopener noreferrer">More by me</a>
     <!-- Not live yet. Put the real address in place of #TODO, then uncomment:

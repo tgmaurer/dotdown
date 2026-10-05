@@ -232,14 +232,30 @@ function saveHomeEdit(encoded) {
 // The interface is English, so the date is too. en-GB reads day-month-year
 // with a 24-hour clock ("Sun, 14 Mar 2027, 00:00"), which is hard to misread.
 // Pass undefined instead to follow each visitor's own locale.
-const targetFormat = new Intl.DateTimeFormat('en-GB', {
+const dateTimeOptions = {
   weekday: 'short',
   day: 'numeric',
   month: 'short',
   year: 'numeric',
   hour: '2-digit',
   minute: '2-digit',
-});
+};
+const dateTimeFormat = new Intl.DateTimeFormat('en-GB', dateTimeOptions);
+
+// The target also names the visitor's time zone as an offset ("GMT+2"):
+// short enough to stay on one line on a phone, and the same style everywhere.
+// It is the offset on the target date, so across a daylight saving change it
+// can differ from today's. Browsers without 'shortOffset' (Safari before 15.4)
+// fall back to their usual short name.
+function zoneFormat(timeZoneName) {
+  return new Intl.DateTimeFormat('en-GB', { ...dateTimeOptions, timeZoneName });
+}
+let targetFormat;
+try {
+  targetFormat = zoneFormat('shortOffset');
+} catch {
+  targetFormat = zoneFormat('short');
+}
 
 // For a start that is only a date (a link without a creation time).
 const startFormat = new Intl.DateTimeFormat('en-GB', {
@@ -252,13 +268,14 @@ const startFormat = new Intl.DateTimeFormat('en-GB', {
 // Draws everything for the current state, then starts the clock.
 function render() {
   document.title = state.t;
+  $('corner').hidden = true; // under "More" instead
   $('intro').hidden = true;
   $('notice').hidden = true;
   $('view').hidden = false;
   $('name').textContent = state.t;
   const created = parseCreated(state.c);
   const { y, m, d } = parseDate(created.day);
-  $('start').textContent = (created.hasTime ? targetFormat : startFormat).format(
+  $('start').textContent = (created.hasTime ? dateTimeFormat : startFormat).format(
     new Date(y, m - 1, d, 0, created.minutes)
   );
   $('target').textContent = targetFormat.format(localMidnight(state.d));
@@ -479,9 +496,15 @@ function openEditor() {
   editor.hidden = false;
   $('edit-toggle').textContent = 'Close';
   $('edit-toggle').setAttribute('aria-expanded', 'true');
+  // The form opens below the countdown, often out of sight on a phone.
+  editor.scrollIntoView({
+    behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    block: 'start',
+  });
 }
 
 function closeEditor() {
+  window.scrollTo({ top: 0 });
   editor.hidden = true;
   $('edit-toggle').textContent = 'Edit';
   $('edit-toggle').setAttribute('aria-expanded', 'false');
@@ -505,6 +528,8 @@ function showCreate(message, fallback) {
   pendingHint = '';
   document.title = 'Dwindle';
   $('view').hidden = true;
+  $('corner').hidden = false;
+  setMenu(false);
   $('hint').hidden = true;
   $('intro').hidden = false;
   $('notice').textContent = message || '';
@@ -786,6 +811,33 @@ $('hint-close').addEventListener('click', () => {
   $('hint').hidden = true;
 });
 
+// ---------- More menu ----------
+// On a countdown, the corner links live behind "More". They are copied from
+// #corner, so each link is written once in index.html.
+
+const moreMenu = $('more-menu');
+moreMenu.append(...[...$('corner').querySelectorAll('a')].map((link) => link.cloneNode(true)));
+
+function setMenu(open) {
+  moreMenu.hidden = !open;
+  $('more-toggle').setAttribute('aria-expanded', String(open));
+}
+
+$('more-toggle').addEventListener('click', () => setMenu(moreMenu.hidden));
+
+// Closes on a link (it opens in a new tab), a click anywhere else, or Escape.
+document.addEventListener('click', (event) => {
+  if (!moreMenu.hidden && (event.target.closest('#more-menu a') || !event.target.closest('.more'))) {
+    setMenu(false);
+  }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !moreMenu.hidden) {
+    setMenu(false);
+    $('more-toggle').focus();
+  }
+});
+
 // The placeholder links point at "#TODO". Following one would overwrite the
 // hash, which is the countdown itself, so swallow those clicks.
 document.addEventListener('click', (event) => {
@@ -828,5 +880,11 @@ window.addEventListener('keydown', (event) => {
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) tick();
 });
+
+// Keep the app's files on the device for fast, offline launches (see sw.js).
+// Not available on file:// or plain http other than localhost; that is fine.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 
 load();
