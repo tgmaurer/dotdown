@@ -586,7 +586,11 @@ input {
   display: block;
   width: 100%;
   min-height: 2.75rem;
-  padding: 0.25rem 0.75rem;
+  /* Top and bottom padding that exactly fill the 44px with one line of text
+     (line-height 1.6em, 1px borders). Safari centres the text of a text
+     field but puts a date field's at the top, so leaving nothing to centre
+     makes both sit at the same height. */
+  padding: calc((2.75rem - 2px - 1.6em) / 2) 0.75rem;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
   background: transparent;
@@ -610,6 +614,17 @@ input:focus-visible {
 /* iOS centres the value of a date input by default. */
 input::-webkit-date-and-time-value {
   text-align: left;
+}
+
+/* The parts of a date field come with a little padding of their own in
+   Safari and Chrome, which pushes the date right of the other fields' text. */
+input::-webkit-datetime-edit,
+input::-webkit-datetime-edit-fields-wrapper,
+input::-webkit-datetime-edit-day-field,
+input::-webkit-datetime-edit-month-field,
+input::-webkit-datetime-edit-year-field {
+  margin: 0;
+  padding: 0;
 }
 
 #f-goals li {
