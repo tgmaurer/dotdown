@@ -43,6 +43,12 @@ that mode the app remembers edits itself (`dwindle:home` in `localStorage`
 maps the icon's link to the latest one) and carries on from the latest version
 at the next launch.
 
+**It works offline.** Once the app has been opened, its files are kept on the
+device (`sw.js`), so it opens without a connection, from the home screen too.
+Nothing about your countdowns is involved: they live in the link, and the
+copy holds only the app's own files. A new version reaches a device on the
+second launch after it is published.
+
 ## State format
 
 JSON, encoded as UTF-8, then base64url without padding, placed after the `#`:

@@ -7,6 +7,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>Dwindle</title>
   <meta name="description" content="A countdown to one date. The whole thing lives in the link.">
+  <link rel="canonical" href="https://tgmaurer.github.io/dwindle/">
+
+  <!-- Link previews: the card chat apps and social sites show for a shared
+       link. They fetch the page without the part after "#", so every
+       countdown shares this same card and never its name or goals. The
+       addresses must be absolute; update them if the site moves. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dwindle">
+  <meta property="og:title" content="Dwindle">
+  <meta property="og:description" content="A countdown to one date. The whole thing lives in the link.">
+  <meta property="og:url" content="https://tgmaurer.github.io/dwindle/">
+  <meta property="og:image" content="https://tgmaurer.github.io/dwindle/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="180 days, in big numbers above a grid of day squares, some already gone.">
+  <meta name="twitter:card" content="summary_large_image">
 
   <!-- The link holds the user's goals, so never send it anywhere as a referrer. -->
   <meta name="referrer" content="no-referrer">
@@ -26,6 +42,13 @@
 
   <!-- Fetch the font early so the text does not visibly switch typeface. -->
   <link rel="preload" href="fonts/CommitMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- The page background before style.css arrives, so the first frame is
+       already the right colour in light and dark mode. No script needed:
+       Dwindle follows the system setting. Keep in step with --bg in style.css. -->
+  <style>
+    html { background: #f5f5f2; }
+    @media (prefers-color-scheme: dark) { html { background: #141413; } }
+  </style>
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
 </head>
@@ -131,10 +154,14 @@
   -->
   <div id="ad" class="ad" hidden></div>
 
-  <!-- Links open in a new tab, so the countdown stays open. Shown on the
-       create page only; a countdown shows them under "More". -->
+  <!-- Shown on the create page only; a countdown shows them under "More".
+       Privacy opens in the same tab, so Back (or its "Back to Dwindle")
+       returns to the countdown; that also avoids the separate browser sheet
+       a new tab opens over a home screen app. It passes on only the site's
+       address as referrer, so the privacy page can tell it came from here.
+       GitHub links open in a new tab, so the countdown stays open. -->
   <aside id="corner" aria-label="More">
-    <a href="privacy.html" target="_blank" rel="noopener">Privacy</a>
+    <a href="privacy.html" referrerpolicy="origin">Privacy</a>
     <a href="https://github.com/tgmaurer/dwindle" target="_blank" rel="noopener noreferrer">Source</a>
     <a href="https://github.com/tgmaurer" target="_blank" rel="noopener noreferrer">More by me</a>
     <!-- Not live yet. Put the real address in place of #TODO, then uncomment:

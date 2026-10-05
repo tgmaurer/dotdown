@@ -61,6 +61,22 @@ make sense later: an issue is public and needs a GitHub account, and someone
 with a privacy question may want neither. It becomes more relevant once the
 "Buy me a coffee" link goes live.
 
+## Link preview
+
+Chat apps and social sites show a card for a shared link, built from the
+`og:` and `twitter:` tags in the `<head>` of `index.html` and `privacy.html`
+and the picture `og-image.png`. They fetch the page without the part after
+`#`, so every countdown shares the same card, and its name and goals never
+reach them.
+
+- The tags hold absolute addresses (`https://tgmaurer.github.io/dwindle/`).
+  Update them, and `<link rel="canonical">`, if the site moves.
+- `og-image.png` is rendered from `docs/og-image.html`; the command to
+  re-render it is at the top of that file.
+- Apps keep a card for a while after fetching it. To check a change, use a
+  link that was never shared, or a preview checker such as
+  <https://www.opengraph.xyz/>.
+
 ## Manual test checklist
 
 - [ ] Create a countdown, reload the page, and the hash and view persist.
@@ -84,7 +100,7 @@ with a privacy question may want neither. It becomes more relevant once the
 - [ ] Deploy a visible change: the first launch afterwards still shows the old version, the second the new one.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.
 - [ ] Press Edit on a phone: the page scrolls down to the form.
-- [ ] "Privacy" in the corner opens the privacy page in a new tab.
+- [ ] "Privacy" (corner or More menu) opens the privacy page in the same tab, with no white flash in dark mode. "Back to Dwindle" and the browser's Back both return to the same countdown, also in the home screen app.
 - [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
 
 ## Domain
@@ -111,6 +127,8 @@ Things to know before moving to another address:
 - Browser storage belongs to the address. After a move, the "last countdown"
   and edits remembered for home screen icons do not come along; people open
   their link once on the new address and carry on from there.
+- The link preview tags and the canonical link hold the full address
+  (see "Link preview").
 - A rename also means new icons, the page title, the `dwindle:` storage keys
   and the repository name.
 
