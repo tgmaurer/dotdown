@@ -78,6 +78,7 @@ with a privacy question may want neither. It becomes more relevant once the
 - [ ] "% gone" starts at 0% for a new countdown, rises during the day, and reads 100% only once the target is reached.
 - [ ] From a countdown, press "New countdown" and create another one. The browser's Back button returns to the first countdown, and Forward to the new one. Editing does not add Back steps.
 - [ ] A countdown of a year or more reads "<1% gone" (not "0%") from its first hour.
+- [ ] While the percentage reads 24–26%, 32–34%, 49–51% or 65–67%, the caption adds "a quarter", "a third", "half" or "two thirds"; on a countdown longer than about 100 days, only for the 3 days around the mark.
 - [ ] Open the app once, go offline (flight mode), and open it again from the home screen: it loads, with the font.
 - [ ] Deploy a visible change: the first launch afterwards still shows the old version, the second the new one.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.

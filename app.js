@@ -346,6 +346,32 @@ function percentText(share) {
   return percent === 0 && share > 0 ? '<1% gone' : `${percent}% gone`;
 }
 
+// Marks in the span. Three quarters is left out: the "Getting close" tag
+// marks about the same moment.
+const MILESTONES = [
+  [1 / 4, 'a quarter'],
+  [1 / 3, 'a third'],
+  [1 / 2, 'half'],
+  [2 / 3, 'two thirds'],
+];
+
+// Around each mark the caption names it: while the percentage reads one
+// below, at or one above it (24, 25 and 26% for a quarter). On a long
+// countdown, where that would last more than 3 days, for 3 days centred on
+// the mark.
+function milestone(share) {
+  const total = spanSeconds();
+  if (total <= 0) return '';
+  const cap = (1.5 * 86400) / total; // 1.5 days, as a share of the span
+  for (const [at, text] of MILESTONES) {
+    const percent = Math.floor(at * 100) / 100; // as the caption shows it
+    const from = Math.max(percent - 0.01, at - cap);
+    const to = Math.min(percent + 0.02, at + cap);
+    if (share >= from && share < to) return text;
+  }
+  return '';
+}
+
 // Runs about once a second. Everything is derived from the clock on each run
 // (never from a counter), so a tab that slept in the background cannot drift.
 function tick() {
@@ -369,6 +395,7 @@ function tick() {
 
   if (passed) {
     $('percent').textContent = '100% gone';
+    $('milestone').textContent = '';
     const ago = daysBetween(state.d, today);
     $('passed').textContent =
       ago < 1 ? 'Today is the day.' : `Deadline passed ${ago} ${ago === 1 ? 'day' : 'days'} ago`;
@@ -384,6 +411,8 @@ function tick() {
   const seconds = clockSecondsLeft(now, today);
   const share = shareGone(seconds);
   $('percent').textContent = percentText(share);
+  const mark = milestone(share);
+  $('milestone').textContent = mark ? `· ${mark}` : '';
   const days = Math.floor(seconds / 86400);
   $('t-days').textContent = days;
   $('t-days').classList.toggle('long', days > 99999);

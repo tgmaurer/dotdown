@@ -410,6 +410,11 @@ ul {
   font-weight: 700;
 }
 
+/* "· half": shown around a quarter, a third, half and two thirds. */
+#milestone {
+  color: var(--ink);
+}
+
 /* ---------- Goals ---------- */
 
 .goals {
