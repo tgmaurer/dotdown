@@ -1,0 +1,135 @@
+<!doctype html>
+<!--
+  Source of og-image.png, the picture shown when a Dwindle link is shared
+  (see "Link preview" in development.md). Re-render it from the repository root:
+
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
+    --hide-scrollbars --window-size=1200,630 --screenshot=og-image.png \
+    docs/og-image.html
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dwindle link preview</title>
+  <style>
+    @font-face {
+      font-family: "Commit Mono";
+      src: url("../fonts/CommitMono-Variable.woff2") format("woff2");
+      font-weight: 200 700;
+    }
+
+    /* The app's dark colours (style.css). */
+    :root {
+      --bg: #141413;
+      --ink: #ecece8;
+      --muted: #a2a29d;
+      --faint: #3a3a37;
+      --accent: #ff6a55;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    body {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      padding: 64px 60px 60px;
+      color: var(--ink);
+      font-family: "Commit Mono", monospace;
+      font-feature-settings: "cv02", "cv05", "cv06";
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 26px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+    }
+
+    .days {
+      display: flex;
+      align-items: baseline;
+      gap: 28px;
+      margin-top: 28px;
+    }
+
+    .num {
+      font-size: 188px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .unit {
+      color: var(--muted);
+      font-size: 30px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    /* As the app draws a 240-day countdown with 180 days left: 60 gone,
+       today, and the days still to come. */
+    .dots {
+      display: grid;
+      grid-template-columns: repeat(48, 14px);
+      justify-content: space-between; /* fills the width, like the margins */
+      row-gap: 8px;
+      margin-top: 40px;
+    }
+
+    .dots i {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--ink);
+    }
+
+    .dots .gone {
+      background: var(--faint);
+    }
+
+    .dots .today {
+      background: var(--accent);
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .tagline {
+      margin-top: auto;
+      color: var(--muted);
+      font-size: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="brand"><img src="../favicon.svg" alt="">Dwindle</div>
+  <div class="days"><span class="num">180</span><span class="unit">days</span></div>
+  <div class="dots" id="dots"></div>
+  <p class="tagline">Six months feels far. 180 days doesn’t.</p>
+  <script>
+    const dots = document.getElementById('dots');
+    for (let i = 0; i < 240; i++) {
+      const dot = document.createElement('i');
+      if (i < 60) dot.className = 'gone';
+      else if (i === 60) dot.className = 'today';
+      dots.append(dot);
+    }
+  </script>
+</body>
+</html>
