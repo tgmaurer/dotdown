@@ -739,6 +739,31 @@ input::-webkit-date-and-time-value {
   }
 }
 
+/* ---------- Privacy page ---------- */
+
+.page section {
+  margin-top: 2rem;
+}
+
+.page section p {
+  margin-top: 0.5rem;
+}
+
+.page a {
+  color: inherit;
+  text-underline-offset: 0.3em;
+}
+
+.page code {
+  font: inherit;
+}
+
+.page .updated {
+  margin-top: 2.5rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
 .ad {
   max-width: 38rem;
   margin: 3rem auto 0;

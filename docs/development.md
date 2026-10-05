@@ -50,6 +50,12 @@ deploy reaches a device on its **second** launch after the deploy, not the first
 - Service workers need `https` or `localhost`. Opening `index.html` as a file
   works as before, just without the offline copy.
 
+## Privacy page
+
+`privacy.html` is linked as "Privacy" in the corner. Update it (and its "Last
+updated" date) whenever the app starts storing or sending something new, or
+the hosting changes.
+
 ## Manual test checklist
 
 - [ ] Create a countdown, reload the page, and the hash and view persist.
@@ -70,6 +76,7 @@ deploy reaches a device on its **second** launch after the deploy, not the first
 - [ ] Deploy a visible change: the first launch afterwards still shows the old version, the second the new one.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.
 - [ ] Press Edit on a phone: the page scrolls down to the form.
+- [ ] "Privacy" in the corner opens the privacy page in a new tab.
 - [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
 
 ## Domain
