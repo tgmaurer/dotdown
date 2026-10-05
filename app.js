@@ -495,9 +495,15 @@ function openEditor() {
   editor.hidden = false;
   $('edit-toggle').textContent = 'Close';
   $('edit-toggle').setAttribute('aria-expanded', 'true');
+  // The form opens below the countdown, often out of sight on a phone.
+  editor.scrollIntoView({
+    behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    block: 'start',
+  });
 }
 
 function closeEditor() {
+  window.scrollTo({ top: 0 });
   editor.hidden = true;
   $('edit-toggle').textContent = 'Edit';
   $('edit-toggle').setAttribute('aria-expanded', 'false');
