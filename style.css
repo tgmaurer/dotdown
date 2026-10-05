@@ -337,11 +337,6 @@ ul {
   width: 5ch; /* "until" and "ended" are the longest labels */
 }
 
-/* "(your local time)" moves to the next line as a whole, never split. */
-.together {
-  white-space: nowrap;
-}
-
 /* ---------- Day grid (one square per day) ---------- */
 
 .span {

@@ -232,14 +232,30 @@ function saveHomeEdit(encoded) {
 // The interface is English, so the date is too. en-GB reads day-month-year
 // with a 24-hour clock ("Sun, 14 Mar 2027, 00:00"), which is hard to misread.
 // Pass undefined instead to follow each visitor's own locale.
-const targetFormat = new Intl.DateTimeFormat('en-GB', {
+const dateTimeOptions = {
   weekday: 'short',
   day: 'numeric',
   month: 'short',
   year: 'numeric',
   hour: '2-digit',
   minute: '2-digit',
-});
+};
+const dateTimeFormat = new Intl.DateTimeFormat('en-GB', dateTimeOptions);
+
+// The target also names the visitor's time zone as an offset ("GMT+2"):
+// short enough to stay on one line on a phone, and the same style everywhere.
+// It is the offset on the target date, so across a daylight saving change it
+// can differ from today's. Browsers without 'shortOffset' (Safari before 15.4)
+// fall back to their usual short name.
+function zoneFormat(timeZoneName) {
+  return new Intl.DateTimeFormat('en-GB', { ...dateTimeOptions, timeZoneName });
+}
+let targetFormat;
+try {
+  targetFormat = zoneFormat('shortOffset');
+} catch {
+  targetFormat = zoneFormat('short');
+}
 
 // For a start that is only a date (a link without a creation time).
 const startFormat = new Intl.DateTimeFormat('en-GB', {
@@ -258,7 +274,7 @@ function render() {
   $('name').textContent = state.t;
   const created = parseCreated(state.c);
   const { y, m, d } = parseDate(created.day);
-  $('start').textContent = (created.hasTime ? targetFormat : startFormat).format(
+  $('start').textContent = (created.hasTime ? dateTimeFormat : startFormat).format(
     new Date(y, m - 1, d, 0, created.minutes)
   );
   $('target').textContent = targetFormat.format(localMidnight(state.d));
