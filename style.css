@@ -103,15 +103,15 @@ html {
 body {
   margin: 0;
   /* Same padding on the top, left and right. Safe-area insets are for
-     notched phones (needs viewport-fit=cover). The bottom padding is just
-     enough to keep content clear of the fixed corner links, so short pages
-     do not scroll for no reason. */
+     notched phones (needs viewport-fit=cover). No padding at the bottom
+     beyond the safe area: the corner links end the page, and their tap
+     area is their spacing. */
   padding:
     /* A little extra on top keeps the first line clear of the phone's
        translucent status bar. */
     calc(max(var(--gutter), env(safe-area-inset-top)) + 0.5rem)
     var(--gutter-right) /* shrinks by the scrollbar's width, see :root */
-    calc(4rem + env(safe-area-inset-bottom))
+    env(safe-area-inset-bottom)
     max(var(--gutter), env(safe-area-inset-left));
   background: var(--bg);
   color: var(--ink);
@@ -123,9 +123,17 @@ body {
      lone word. Inherited, so this covers the name, the dates, goals, the
      hint and the notice. Browsers without support just wrap as usual. */
   text-wrap: pretty;
+  /* At least one screen tall, so on a short page the corner links (pushed
+     down by margin-top: auto) sit at the bottom edge. svh: the screen with
+     the browser's toolbars shown, so they are never hidden behind them. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 main {
+  width: 100%; /* a flex item would otherwise shrink to its content */
   max-width: 38rem;
   margin: 0 auto;
 }
@@ -510,6 +518,45 @@ button:disabled {
   margin-top: 2rem;
 }
 
+/* "More" sits at the right end of the row; its menu opens upward. */
+.more {
+  position: relative;
+  margin-left: auto;
+}
+
+.more .link {
+  text-align: right;
+}
+
+.menu {
+  position: absolute;
+  right: -4px;
+  bottom: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--faint);
+  border-radius: var(--radius);
+  background: var(--bg);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.menu a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--muted);
+  text-underline-offset: 0.3em;
+}
+
+@media (hover: hover) {
+  .menu a:hover {
+    color: var(--ink);
+  }
+}
+
 /* ---------- Form ---------- */
 
 .editor {
@@ -701,14 +748,14 @@ input::-webkit-date-and-time-value {
 
 /* ---------- Corner slot and ad slot ---------- */
 
+/* The last thing on the page, at the right. On a short page it sits at the
+   bottom of the screen; on a long one it comes after the content, so it never
+   covers anything. */
 #corner {
-  position: fixed;
-  right: var(--gutter-right); /* lines up with the content's right edge */
-  /* 0 on desktop; on phones, clear of the home indicator and rounded corners. */
-  bottom: env(safe-area-inset-bottom, 0px);
   display: flex;
-  border-radius: var(--radius);
-  background: var(--bg); /* so page text never shows through the links */
+  align-self: flex-end;
+  margin-top: auto;
+  padding-top: 2rem; /* the least space between the content and the links */
   font-size: 0.75rem;
 }
 
@@ -752,12 +799,13 @@ input::-webkit-date-and-time-value {
 }
 
 .page .updated {
-  margin-top: 2.5rem;
+  margin: 2.5rem 0 var(--gutter); /* no corner links here to end the page */
   color: var(--muted);
   font-size: 0.8125rem;
 }
 
 .ad {
+  width: 100%;
   max-width: 38rem;
   margin: 3rem auto 0;
 }

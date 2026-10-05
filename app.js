@@ -268,6 +268,7 @@ const startFormat = new Intl.DateTimeFormat('en-GB', {
 // Draws everything for the current state, then starts the clock.
 function render() {
   document.title = state.t;
+  $('corner').hidden = true; // under "More" instead
   $('intro').hidden = true;
   $('notice').hidden = true;
   $('view').hidden = false;
@@ -527,6 +528,8 @@ function showCreate(message, fallback) {
   pendingHint = '';
   document.title = 'Dwindle';
   $('view').hidden = true;
+  $('corner').hidden = false;
+  setMenu(false);
   $('hint').hidden = true;
   $('intro').hidden = false;
   $('notice').textContent = message || '';
@@ -806,6 +809,33 @@ $('copy').addEventListener('click', (event) => copyLink(event.currentTarget));
 $('hint-copy').addEventListener('click', (event) => copyLink(event.currentTarget));
 $('hint-close').addEventListener('click', () => {
   $('hint').hidden = true;
+});
+
+// ---------- More menu ----------
+// On a countdown, the corner links live behind "More". They are copied from
+// #corner, so each link is written once in index.html.
+
+const moreMenu = $('more-menu');
+moreMenu.append(...[...$('corner').querySelectorAll('a')].map((link) => link.cloneNode(true)));
+
+function setMenu(open) {
+  moreMenu.hidden = !open;
+  $('more-toggle').setAttribute('aria-expanded', String(open));
+}
+
+$('more-toggle').addEventListener('click', () => setMenu(moreMenu.hidden));
+
+// Closes on a link (it opens in a new tab), a click anywhere else, or Escape.
+document.addEventListener('click', (event) => {
+  if (!moreMenu.hidden && (event.target.closest('#more-menu a') || !event.target.closest('.more'))) {
+    setMenu(false);
+  }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !moreMenu.hidden) {
+    setMenu(false);
+    $('more-toggle').focus();
+  }
 });
 
 // The placeholder links point at "#TODO". Following one would overwrite the
