@@ -42,6 +42,13 @@
 
   <!-- Fetch the font early so the text does not visibly switch typeface. -->
   <link rel="preload" href="fonts/CommitMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- The page background before style.css arrives, so the first frame is
+       already the right colour in light and dark mode. No script needed:
+       Dwindle follows the system setting. Keep in step with --bg in style.css. -->
+  <style>
+    html { background: #f5f5f2; }
+    @media (prefers-color-scheme: dark) { html { background: #141413; } }
+  </style>
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
 </head>
