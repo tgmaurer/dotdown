@@ -325,14 +325,65 @@ function stage(today) {
   return '';
 }
 
-// How much of the span is gone, in percent, by the clock: from the minute the
-// countdown was created to the target. Rounded down, so it reads 100 only
-// once the target is reached.
-function percentGone(secondsLeft) {
+// Seconds from the minute the countdown was created to the target, by the clock.
+function spanSeconds() {
   const created = parseCreated(state.c);
-  const total = daysBetween(created.day, state.d) * 86400 - created.minutes * 60;
+  return daysBetween(created.day, state.d) * 86400 - created.minutes * 60;
+}
+
+// How much of the span is gone, from 0 to 1.
+function shareGone(secondsLeft) {
+  const total = spanSeconds();
   if (total <= 0) return 0; // created at or after the target
-  return Math.min(99, Math.max(0, Math.floor(((total - secondsLeft) / total) * 100)));
+  return Math.min(1, Math.max(0, (total - secondsLeft) / total));
+}
+
+// "34% gone". Rounded down, so it reads 100 only once the target is reached.
+// Under 1% reads "<1%" once anything is gone, so a long countdown does not
+// sit at "0%" for its first days.
+function percentText(share) {
+  const percent = Math.min(99, Math.floor(share * 100));
+  return percent === 0 && share > 0 ? '<1% gone' : `${percent}% gone`;
+}
+
+// Marks in the span. Three quarters is left out: the "Getting close" tag
+// marks about the same moment.
+const MILESTONES = [
+  [1 / 4, 'a quarter'],
+  [1 / 3, 'a third'],
+  [1 / 2, 'half'],
+  [2 / 3, 'two thirds'],
+];
+
+// Around each mark the caption names it: while the percentage reads one
+// below, at or one above it (24, 25 and 26% for a quarter). On a long
+// countdown, where that would last more than 3 days, for 3 days centred on
+// the mark.
+function milestone(share) {
+  const total = spanSeconds();
+  if (total <= 0) return '';
+  const cap = (1.5 * 86400) / total; // 1.5 days, as a share of the span
+  for (const [at, text] of MILESTONES) {
+    const percent = Math.floor(at * 100) / 100; // as the caption shows it
+    const from = Math.max(percent - 0.01, at - cap);
+    const to = Math.min(percent + 0.02, at + cap);
+    if (share >= from && share < to) return text;
+  }
+  return '';
+}
+
+// The tab title while the tab is in the background: "3d 12h 58m · Trip to
+// Japan". To the minute, because browsers slow a background tab's timers to
+// about once a minute; seconds would freeze and jump.
+function backgroundTitle(seconds) {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor(seconds / 3600) % 24;
+  const minutes = Math.floor(seconds / 60) % 60;
+  let left = `${minutes}m`;
+  if (days) left = `${days}d ${hours}h ${left}`;
+  else if (hours) left = `${hours}h ${left}`;
+  else if (!minutes) left = '<1m';
+  return `${left} · ${state.t}`;
 }
 
 // Runs about once a second. Everything is derived from the clock on each run
@@ -357,7 +408,9 @@ function tick() {
   $('target-label').textContent = passed ? 'ended' : 'until';
 
   if (passed) {
+    document.title = state.t;
     $('percent').textContent = '100% gone';
+    $('milestone').textContent = '';
     const ago = daysBetween(state.d, today);
     $('passed').textContent =
       ago < 1 ? 'Today is the day.' : `Deadline passed ${ago} ${ago === 1 ? 'day' : 'days'} ago`;
@@ -371,7 +424,11 @@ function tick() {
   $('soon').textContent = phase === 'close' ? 'Getting close' : 'Time is almost up';
 
   const seconds = clockSecondsLeft(now, today);
-  $('percent').textContent = `${percentGone(seconds)}% gone`;
+  const share = shareGone(seconds);
+  $('percent').textContent = percentText(share);
+  const mark = milestone(share);
+  $('milestone').textContent = mark ? `· ${mark}` : '';
+  document.title = document.hidden ? backgroundTitle(seconds) : state.t;
   const days = Math.floor(seconds / 86400);
   $('t-days').textContent = days;
   $('t-days').classList.toggle('long', days > 99999);
@@ -876,10 +933,9 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
-// Timers are throttled in background tabs, so catch up the moment we are back.
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) tick();
-});
+// Timers are throttled in background tabs, so catch up the moment we are
+// back. Also switches the tab title between the name and the time left.
+document.addEventListener('visibilitychange', tick);
 
 // Keep the app's files on the device for fast, offline launches (see sw.js).
 // Not available on file:// or plain http other than localhost; that is fine.
