@@ -851,4 +851,10 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden) tick();
 });
 
+// Keep the app's files on the device for fast, offline launches (see sw.js).
+// Not available on file:// or plain http other than localhost; that is fine.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
 load();

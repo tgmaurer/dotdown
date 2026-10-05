@@ -34,6 +34,22 @@ to that list as well.
 - There is deliberately no web app manifest: its `start_url` could replace the
   current URL and drop the state.
 
+## Offline copy (service worker)
+
+`sw.js` keeps a copy of the app's files in the browser, so Dwindle opens from
+the home screen without waiting for the network and works offline. Every file
+is answered from the copy at once and fetched again in the background, so a
+deploy reaches a device on its **second** launch after the deploy, not the first.
+
+- There is no version number to bump. But when you add, rename or remove an
+  app file, update the `FILES` list in `sw.js`: a file missing there still
+  works, it is just not available offline until it has been loaded once; a
+  listed file that no longer exists makes the copy fail to install.
+- The countdown never passes through the service worker: it lives after the
+  `#`, which is not part of any request.
+- Service workers need `https` or `localhost`. Opening `index.html` as a file
+  works as before, just without the offline copy.
+
 ## Manual test checklist
 
 - [ ] Create a countdown, reload the page, and the hash and view persist.
@@ -50,6 +66,8 @@ to that list as well.
 - [ ] Final stretch: in the last tenth of its span (at most the last 7 days, at least the last day) the tag turns red, reads "Time is almost up", and the day number turns red. One day earlier it does not.
 - [ ] "% gone" starts at 0% for a new countdown, rises during the day, and reads 100% only once the target is reached.
 - [ ] From a countdown, press "New countdown" and create another one. The browser's Back button returns to the first countdown, and Forward to the new one. Editing does not add Back steps.
+- [ ] Open the app once, go offline (flight mode), and open it again from the home screen: it loads, with the font.
+- [ ] Deploy a visible change: the first launch afterwards still shows the old version, the second the new one.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.
 - [ ] Press Edit on a phone: the page scrolls down to the form.
 - [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
@@ -84,7 +102,7 @@ Things to know before moving to another address:
 ## Out of scope for v1
 
 Done/not-done goals, several countdowns per page, a live countdown in the tab
-title, a web app manifest or service worker, accounts or sync, notifications,
+title, a web app manifest, accounts or sync, notifications,
 ads or analytics scripts, and the Temporal API.
 
 The "Buy me a coffee" link also waits for a later iteration. It is already in
