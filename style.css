@@ -708,6 +708,7 @@ input::-webkit-datetime-edit-year-field {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 1.5rem;
+  margin-bottom: 24px;
 }
 
 /* ---------- Hint (after an edit) ---------- */
