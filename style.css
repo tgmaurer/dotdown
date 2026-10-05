@@ -125,13 +125,6 @@ body {
   text-wrap: pretty;
 }
 
-/* Wider than a phone: more air above the page. */
-@media (min-width: 40rem) {
-  body {
-    padding-top: max(2.5rem, env(safe-area-inset-top));
-  }
-}
-
 main {
   max-width: 38rem;
   margin: 0 auto;
