@@ -325,14 +325,25 @@ function stage(today) {
   return '';
 }
 
-// How much of the span is gone, in percent, by the clock: from the minute the
-// countdown was created to the target. Rounded down, so it reads 100 only
-// once the target is reached.
-function percentGone(secondsLeft) {
+// Seconds from the minute the countdown was created to the target, by the clock.
+function spanSeconds() {
   const created = parseCreated(state.c);
-  const total = daysBetween(created.day, state.d) * 86400 - created.minutes * 60;
+  return daysBetween(created.day, state.d) * 86400 - created.minutes * 60;
+}
+
+// How much of the span is gone, from 0 to 1.
+function shareGone(secondsLeft) {
+  const total = spanSeconds();
   if (total <= 0) return 0; // created at or after the target
-  return Math.min(99, Math.max(0, Math.floor(((total - secondsLeft) / total) * 100)));
+  return Math.min(1, Math.max(0, (total - secondsLeft) / total));
+}
+
+// "34% gone". Rounded down, so it reads 100 only once the target is reached.
+// Under 1% reads "<1%" once anything is gone, so a long countdown does not
+// sit at "0%" for its first days.
+function percentText(share) {
+  const percent = Math.min(99, Math.floor(share * 100));
+  return percent === 0 && share > 0 ? '<1% gone' : `${percent}% gone`;
 }
 
 // Runs about once a second. Everything is derived from the clock on each run
@@ -371,7 +382,8 @@ function tick() {
   $('soon').textContent = phase === 'close' ? 'Getting close' : 'Time is almost up';
 
   const seconds = clockSecondsLeft(now, today);
-  $('percent').textContent = `${percentGone(seconds)}% gone`;
+  const share = shareGone(seconds);
+  $('percent').textContent = percentText(share);
   const days = Math.floor(seconds / 86400);
   $('t-days').textContent = days;
   $('t-days').classList.toggle('long', days > 99999);

@@ -77,6 +77,7 @@ with a privacy question may want neither. It becomes more relevant once the
 - [ ] Final stretch: in the last tenth of its span (at most the last 7 days, at least the last day) the tag turns red, reads "Time is almost up", and the day number turns red. One day earlier it does not.
 - [ ] "% gone" starts at 0% for a new countdown, rises during the day, and reads 100% only once the target is reached.
 - [ ] From a countdown, press "New countdown" and create another one. The browser's Back button returns to the first countdown, and Forward to the new one. Editing does not add Back steps.
+- [ ] A countdown of a year or more reads "<1% gone" (not "0%") from its first hour.
 - [ ] Open the app once, go offline (flight mode), and open it again from the home screen: it loads, with the font.
 - [ ] Deploy a visible change: the first launch afterwards still shows the old version, the second the new one.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.
