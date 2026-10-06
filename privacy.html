@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   <!-- Zooming is off here too, to match the app (see index.html). -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>Privacy · Dwindle</title>
-  <meta name="description" content="Dwindle collects nothing. What stays on your device, and what the host logs.">
-  <link rel="canonical" href="https://tgmaurer.github.io/dwindle/privacy.html">
+  <title>Privacy · Dotdown</title>
+  <meta name="description" content="Dotdown collects nothing. What stays on your device, and what the host logs.">
+  <link rel="canonical" href="https://tgmaurer.github.io/dotdown/privacy.html">
 
   <!-- Link previews: the same card as the app, with this page's text (see index.html). -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Dwindle">
-  <meta property="og:title" content="Privacy · Dwindle">
-  <meta property="og:description" content="Dwindle collects nothing. What stays on your device, and what the host logs.">
-  <meta property="og:url" content="https://tgmaurer.github.io/dwindle/privacy.html">
-  <meta property="og:image" content="https://tgmaurer.github.io/dwindle/og-image.png">
+  <meta property="og:site_name" content="Dotdown">
+  <meta property="og:title" content="Privacy · Dotdown">
+  <meta property="og:description" content="Dotdown collects nothing. What stays on your device, and what the host logs.">
+  <meta property="og:url" content="https://tgmaurer.github.io/dotdown/privacy.html">
+  <meta property="og:image" content="https://tgmaurer.github.io/dotdown/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="180 days, in big numbers above a grid of day squares, some already gone.">
@@ -30,7 +30,7 @@
   <link rel="preload" href="fonts/CommitMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <!-- The page background before style.css arrives, so the first frame is
        already the right colour in light and dark mode. No script needed:
-       Dwindle follows the system setting. Keep in step with --bg in style.css. -->
+       Dotdown follows the system setting. Keep in step with --bg in style.css. -->
   <style>
     html { background: #f5f5f2; }
     @media (prefers-color-scheme: dark) { html { background: #141413; } }
@@ -41,7 +41,7 @@
   <main class="page">
     <header class="intro">
       <h1><img src="favicon.svg" alt="" width="24" height="24">Privacy</h1>
-      <p>Dwindle collects nothing. No accounts, no cookies, no analytics, no ads, no trackers.</p>
+      <p>Dotdown collects nothing. No accounts, no cookies, no analytics, no ads, no trackers.</p>
     </header>
 
     <section>
@@ -51,27 +51,27 @@
 
     <section>
       <h2 class="label">What stays on your device</h2>
-      <p>Your browser keeps the last countdown you opened, so the bare address can bring it back. A countdown saved to the home screen also remembers its latest edits there. The browser also keeps a copy of the app’s files so Dwindle opens quickly and works offline. All of this stays in your browser and is never sent anywhere. Clearing the website data for this site in your browser’s settings removes it.</p>
+      <p>Your browser keeps the last countdown you opened, so the bare address can bring it back. A countdown saved to the home screen also remembers its latest edits there. The browser also keeps a copy of the app’s files so Dotdown opens quickly and works offline. All of this stays in your browser and is never sent anywhere. Clearing the website data for this site in your browser’s settings removes it.</p>
     </section>
 
     <section>
       <h2 class="label">Hosting</h2>
-      <p>Dwindle is hosted on GitHub Pages. When you open it, GitHub logs your IP address for security reasons. GitHub does this, not Dwindle, and I cannot see those logs. See <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener noreferrer">GitHub Pages: data collection</a> and the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a>.</p>
+      <p>Dotdown is hosted on GitHub Pages. When you open it, GitHub logs your IP address for security reasons. GitHub does this, not Dotdown, and I cannot see those logs. See <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener noreferrer">GitHub Pages: data collection</a> and the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a>.</p>
       <p>The font is served with the app, so no other server is contacted. The “Source” and “More by me” links lead to GitHub, where GitHub’s own privacy statement applies.</p>
     </section>
 
     <section>
       <h2 class="label">Contact</h2>
-      <p>Dwindle is a personal project by Timothy Maurer. Questions are welcome on <a href="https://github.com/tgmaurer/dwindle/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+      <p>Dotdown is a personal project by Timothy Maurer. Questions are welcome on <a href="https://github.com/tgmaurer/dotdown/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
     </section>
 
-    <p class="updated">Last updated 5 October 2026 · <a id="back" href="./">Back to Dwindle</a></p>
+    <p class="updated">Last updated 5 October 2026 · <a id="back" href="./">Back to Dotdown</a></p>
   </main>
 
   <script>
-    // Came here from Dwindle: step back, so the countdown that linked here
+    // Came here from Dotdown: step back, so the countdown that linked here
     // returns exactly (with several home screen icons, the bare address could
-    // bring back a different one). Otherwise the link just opens Dwindle.
+    // bring back a different one). Otherwise the link just opens Dotdown.
     document.getElementById('back').addEventListener('click', (event) => {
       if (document.referrer.startsWith(location.origin) && history.length > 1) {
         event.preventDefault();

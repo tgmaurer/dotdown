@@ -1,17 +1,17 @@
 # Development notes
 
-Project housekeeping for Dwindle: deploying, what to do before publishing, the
+Project housekeeping for Dotdown: deploying, what to do before publishing, the
 manual test checklist and what was left out of v1. For what the app is and how
 the link format works, see the [README](../README.md).
 
 ## Deploy to GitHub Pages
 
-1. Push to the `main` branch of the `dwindle` repository. `main` is the deploy
+1. Push to the `main` branch of the `dotdown` repository. `main` is the deploy
    branch: whatever is on it is what is live.
 2. One-time setup: in the repository, open **Settings → Pages**. Under **Build
    and deployment**, set **Source** to **Deploy from a branch**, choose
    **`main`** and **`/ (root)`**, and save.
-3. After a minute the app is live at `https://<user>.github.io/dwindle/`.
+3. After a minute the app is live at `https://<user>.github.io/dotdown/`.
 
 All asset paths are relative, so the app works from that sub-path without
 changes.
@@ -36,7 +36,7 @@ to that list as well.
 
 ## Offline copy (service worker)
 
-`sw.js` keeps a copy of the app's files in the browser, so Dwindle opens from
+`sw.js` keeps a copy of the app's files in the browser, so Dotdown opens from
 the home screen without waiting for the network and works offline. Every file
 is answered from the copy at once and fetched again in the background, so a
 deploy reaches a device on its **second** launch after the deploy, not the first.
@@ -69,7 +69,7 @@ and the picture `og-image.png`. They fetch the page without the part after
 `#`, so every countdown shares the same card, and its name and goals never
 reach them.
 
-- The tags hold absolute addresses (`https://tgmaurer.github.io/dwindle/`).
+- The tags hold absolute addresses (`https://tgmaurer.github.io/dotdown/`).
   Update them, and `<link rel="canonical">`, if the site moves.
 - `og-image.png` is rendered from `docs/og-image.html`; the command to
   re-render it is at the top of that file.
@@ -100,37 +100,41 @@ reach them.
 - [ ] Deploy a visible change: the first launch afterwards still shows the old version, the second the new one.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.
 - [ ] Press Edit on a phone: the page scrolls down to the form.
-- [ ] "Privacy" (corner or More menu) opens the privacy page in the same tab, with no white flash in dark mode. "Back to Dwindle" and the browser's Back both return to the same countdown, also in the home screen app.
+- [ ] "Privacy" (corner or More menu) opens the privacy page in the same tab, with no white flash in dark mode. "Back to Dotdown" and the browser's Back both return to the same countdown, also in the home screen app.
 - [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
 
 ## Domain
 
-Dwindle runs at the address GitHub Pages gives it,
-`https://<user>.github.io/dwindle/`, and that is enough for now. A custom
-domain is neither needed nor planned.
+Dotdown runs at the address GitHub Pages gives it,
+`https://<user>.github.io/dotdown/`, and that is enough for now. A custom
+domain is neither needed nor planned. Domains for "dotdown" have not been
+checked; a domain hack or a less common ending would be the place to start.
 
-If that changes: the obvious domains for "dwindle" are taken. Two ways out,
-neither checked for availability yet:
+### Renamed from Dwindle (2026-10-06)
 
-- **Be creative with the domain.** A domain hack or a less common ending, for
-  example `dwindl.ing`, `dwindle.day`, `dwindle.date`, `dwindle.to`, or a
-  prefix such as `getdwindle` or `dwindleapp`.
-- **Rename the project.** Names in the same spirit: Wane, Ebb, Dayfall,
-  Sandglass, Runway, T-minus, Untilthen, Daysleft, Sandfall.
+The app was called Dwindle until an App Store widget with that name and the
+same idea turned up. The old address `https://tgmaurer.github.io/dwindle/`
+is gone: GitHub redirects a renamed repository, but not its Pages site. A
+countdown link keeps working if you swap the path for `/dotdown/` and keep
+everything after the `#`.
 
-Things to know before moving to another address:
+The same moves apply to any future one:
 
 - Every existing link contains the address. GitHub Pages redirects the
   `github.io` address to a custom domain once one is set, and browsers keep
   the `#...` part across that redirect, so old links should keep working.
   Test this before relying on it.
-- Browser storage belongs to the address. After a move, the "last countdown"
-  and edits remembered for home screen icons do not come along; people open
-  their link once on the new address and carry on from there.
+- Browser storage belongs to the origin (`https://<user>.github.io`), not the
+  path, so a repository rename keeps it; that is why the keys carry the
+  prefix `dotdown:`. Changing the prefix leaves the old entries behind
+  (harmless), and the "last countdown" is lost. A move to a custom domain is a
+  new origin, so nothing comes along there: people open their link once on the
+  new address and carry on from there.
 - The link preview tags and the canonical link hold the full address
-  (see "Link preview").
-- A rename also means new icons, the page title, the `dwindle:` storage keys
-  and the repository name.
+  (see "Link preview"); the picture `og-image.png` and `docs/og-image.html`
+  hold the name.
+- A rename also means the page title, the `dotdown:` storage keys, the cache
+  name in `sw.js`, the privacy page and the repository name.
 
 ## Out of scope for v1
 
@@ -149,7 +153,7 @@ countdown.)
 Not planned in detail and not started. Written down so they are not lost.
 
 - **A list of countdowns.** Today the browser remembers only the last
-  countdown (`dwindle:last`), so opening the bare address brings back just
+  countdown (`dotdown:last`), so opening the bare address brings back just
   that one. The idea is to remember several and let you switch between them.
   Things to settle first: where the list shows without crowding the page;
   whether a countdown joins the list when it is created, edited or merely

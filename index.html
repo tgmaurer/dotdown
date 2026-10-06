@@ -5,20 +5,20 @@
   <!-- Zooming is switched off on purpose (see also touch-action in style.css
        and the "No zoom" block in app.js). -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>Dwindle</title>
+  <title>Dotdown</title>
   <meta name="description" content="A countdown to one date. Name it, add a few goals and watch the days shrink. No account, no tracking: the whole thing lives in the link.">
-  <link rel="canonical" href="https://tgmaurer.github.io/dwindle/">
+  <link rel="canonical" href="https://tgmaurer.github.io/dotdown/">
 
   <!-- Link previews: the card chat apps and social sites show for a shared
        link. They fetch the page without the part after "#", so every
        countdown shares this same card and never its name or goals. The
        addresses must be absolute; update them if the site moves. -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Dwindle">
-  <meta property="og:title" content="Dwindle · A countdown to one date">
+  <meta property="og:site_name" content="Dotdown">
+  <meta property="og:title" content="Dotdown · A countdown to one date">
   <meta property="og:description" content="A countdown to one date. Name it, add a few goals and watch the days shrink. No account, no tracking: the whole thing lives in the link.">
-  <meta property="og:url" content="https://tgmaurer.github.io/dwindle/">
-  <meta property="og:image" content="https://tgmaurer.github.io/dwindle/og-image.png">
+  <meta property="og:url" content="https://tgmaurer.github.io/dotdown/">
+  <meta property="og:image" content="https://tgmaurer.github.io/dotdown/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="180 days, in big numbers above a grid of day squares, some already gone.">
@@ -35,7 +35,7 @@
        replace the current URL and drop the state that lives in it. -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Dwindle">
+  <meta name="apple-mobile-web-app-title" content="Dotdown">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -44,7 +44,7 @@
   <link rel="preload" href="fonts/CommitMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <!-- The page background before style.css arrives, so the first frame is
        already the right colour in light and dark mode. No script needed:
-       Dwindle follows the system setting. Keep in step with --bg in style.css. -->
+       Dotdown follows the system setting. Keep in step with --bg in style.css. -->
   <style>
     html { background: #f5f5f2; }
     @media (prefers-color-scheme: dark) { html { background: #141413; } }
@@ -56,7 +56,7 @@
   <main>
     <!-- Shown only while there is no countdown yet. -->
     <header id="intro" class="intro" hidden>
-      <h1><img src="favicon.svg" alt="" width="24" height="24">Dwindle</h1>
+      <h1><img src="favicon.svg" alt="" width="24" height="24">Dotdown</h1>
       <p>Six months feels far. 180 days doesn’t. Name a date and watch it shrink.</p>
     </header>
 
@@ -65,7 +65,7 @@
     <article id="view" hidden>
       <!-- A small brand line, and a way to start over without opening Edit. -->
       <div class="topbar">
-        <span class="brand"><img src="favicon.svg" alt="" width="16" height="16">Dwindle</span>
+        <span class="brand"><img src="favicon.svg" alt="" width="16" height="16">Dotdown</span>
         <button type="button" id="new-top" class="link">New countdown</button>
       </div>
 
@@ -136,7 +136,7 @@
       </p>
     </form>
 
-    <noscript><p class="notice">Dwindle needs JavaScript to count down.</p></noscript>
+    <noscript><p class="notice">Dotdown needs JavaScript to count down.</p></noscript>
   </main>
 
   <!-- Quiet, non-blocking hint shown after an edit. -->
@@ -155,14 +155,14 @@
   <div id="ad" class="ad" hidden></div>
 
   <!-- Shown on the create page only; a countdown shows them under "More".
-       Privacy opens in the same tab, so Back (or its "Back to Dwindle")
+       Privacy opens in the same tab, so Back (or its "Back to Dotdown")
        returns to the countdown; that also avoids the separate browser sheet
        a new tab opens over a home screen app. It passes on only the site's
        address as referrer, so the privacy page can tell it came from here.
        GitHub links open in a new tab, so the countdown stays open. -->
   <aside id="corner" aria-label="More">
     <a href="privacy.html" referrerpolicy="origin">Privacy</a>
-    <a href="https://github.com/tgmaurer/dwindle" target="_blank" rel="noopener noreferrer">Source</a>
+    <a href="https://github.com/tgmaurer/dotdown" target="_blank" rel="noopener noreferrer">Source</a>
     <a href="https://github.com/tgmaurer" target="_blank" rel="noopener noreferrer">More by me</a>
     <!-- Not live yet. Put the real address in place of #TODO, then uncomment:
     <a href="#TODO" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
