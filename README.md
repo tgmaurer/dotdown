@@ -1,4 +1,4 @@
-# Dwindle
+# Dotdown
 
 A tiny countdown to one date. Give it a name and a target date and it shows the
 days, hours, minutes and seconds that are left, plus one small square for every
@@ -28,7 +28,7 @@ storage. (If `STATE_MODE` is switched to `'query'`, the countdown moves into
 the `?s=` part of the link, which *is* sent to the server, so that setting
 gives this up.)
 
-`localStorage` (`dwindle:last`) remembers the last countdown you created or
+`localStorage` (`dotdown:last`) remembers the last countdown you created or
 edited, so opening the bare URL brings it back. It is a convenience only. The
 app works without storage (private mode).
 
@@ -39,7 +39,7 @@ and names the steps for the device.
 
 A page opened from a home screen icon is a special case: there is no browser
 menu in there, and the icon keeps opening the link it was made from. So in
-that mode the app remembers edits itself (`dwindle:home` in `localStorage`
+that mode the app remembers edits itself (`dotdown:home` in `localStorage`
 maps the icon's link to the latest one) and carries on from the latest version
 at the next launch.
 
@@ -85,8 +85,8 @@ and goals are clipped, and goals that are not `{ "t": "text" }` are dropped.
 state sits in the URL. The constant `STATE_MODE` at the top of `app.js` picks
 the place:
 
-- `'hash'` (default): `https://<user>.github.io/dwindle/#<payload>`
-- `'query'`: `https://<user>.github.io/dwindle/?s=<payload>`
+- `'hash'` (default): `https://<user>.github.io/dotdown/#<payload>`
+- `'query'`: `https://<user>.github.io/dotdown/?s=<payload>`
 
 `'query'` is the fallback in case iOS drops the hash when the app is opened
 from the home screen. Whichever mode is set, links in the other form are still

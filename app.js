@@ -1,5 +1,5 @@
 /*
- * Dwindle: a countdown to one date.
+ * Dotdown: a countdown to one date.
  *
  * There is no backend. The whole countdown (name, dates, goals) is encoded in
  * the URL, so a link IS a countdown. localStorage only remembers the last link
@@ -13,8 +13,8 @@
 // Flip to 'query' if iOS standalone (home screen) mode drops the hash.
 const STATE_MODE = 'hash';
 const QUERY_KEY = 's';
-const STORAGE_KEY = 'dwindle:last';
-const HOME_KEY = 'dwindle:home'; // home screen only: { link in the icon: latest link }
+const STORAGE_KEY = 'dotdown:last';
+const HOME_KEY = 'dotdown:home'; // home screen only: { link in the icon: latest link }
 
 const VERSION = 1;
 const MAX_NAME = 60;
@@ -583,7 +583,7 @@ function showCreate(message, fallback) {
   clearTimeout(timer);
   state = null;
   pendingHint = '';
-  document.title = 'Dwindle';
+  document.title = 'Dotdown';
   $('view').hidden = true;
   $('corner').hidden = false;
   setMenu(false);

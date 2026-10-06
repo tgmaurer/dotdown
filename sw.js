@@ -1,4 +1,4 @@
-// Keeps a copy of the app's files on the device, so Dwindle opens without
+// Keeps a copy of the app's files on the device, so Dotdown opens without
 // waiting for the network (home screen launches above all) and works offline.
 //
 // Every file is answered from the copy at once. In the background the file is
@@ -9,7 +9,7 @@
 // The countdown itself never passes through here: it lives after the "#",
 // which is not part of any request.
 
-const CACHE = 'dwindle-app';
+const CACHE = 'dotdown-app';
 
 const FILES = [
   './',
