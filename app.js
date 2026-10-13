@@ -338,12 +338,19 @@ function shareGone(secondsLeft) {
   return Math.min(1, Math.max(0, (total - secondsLeft) / total));
 }
 
-// "34% gone". Rounded down, so it reads 100 only once the target is reached.
-// Under 1% reads "<1%" once anything is gone, so a long countdown does not
-// sit at "0%" for its first days.
-function percentText(share) {
+// Calendar days gone, the same count the dot grid uses.
+function daysGone(today) {
+  const total = spanDays();
+  return total - Math.min(total, Math.max(0, daysBetween(today, state.d)));
+}
+
+// "5 days / 34% gone". Rounded down, so it reads 100 only once the target is
+// reached. Under 1% reads "<1%" once anything is gone, so a long countdown
+// does not sit at "0%" for its first days.
+function percentText(share, gone) {
   const percent = Math.min(99, Math.floor(share * 100));
-  return percent === 0 && share > 0 ? '<1% gone' : `${percent}% gone`;
+  const text = percent === 0 && share > 0 ? '<1%' : `${percent}%`;
+  return `${gone} ${gone === 1 ? 'day' : 'days'} / ${text} gone`;
 }
 
 // Marks in the span. Three quarters is left out: the "Getting close" tag
@@ -409,7 +416,8 @@ function tick() {
 
   if (passed) {
     document.title = state.t;
-    $('percent').textContent = '100% gone';
+    const span = spanDays();
+    $('percent').textContent = `${span} ${span === 1 ? 'day' : 'days'} / 100% gone`;
     $('milestone').textContent = '';
     const ago = daysBetween(state.d, today);
     $('passed').textContent =
@@ -425,7 +433,7 @@ function tick() {
 
   const seconds = clockSecondsLeft(now, today);
   const share = shareGone(seconds);
-  $('percent').textContent = percentText(share);
+  $('percent').textContent = percentText(share, daysGone(today));
   const mark = milestone(share);
   $('milestone').textContent = mark ? `· ${mark}` : '';
   document.title = document.hidden ? backgroundTitle(seconds) : state.t;
