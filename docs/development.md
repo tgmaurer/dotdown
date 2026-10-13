@@ -94,6 +94,7 @@ reach them.
 - [ ] "% gone" starts at 0% for a new countdown, rises during the day, and reads 100% only once the target is reached.
 - [ ] From a countdown, press "New countdown" and create another one. The browser's Back button returns to the first countdown, and Forward to the new one. Editing does not add Back steps.
 - [ ] The caption leads with the days gone, matching the dot grid: "0 days / <1% gone", "1 day / 1% gone", "5 days / 2% gone". It does not wrap awkwardly on a narrow phone.
+- [ ] Editing: name and goals save as you leave each field, but a changed date does not save (URL, storage, countdown) until Done is pressed. Closing with "Close" instead drops the date change, and editing the name with an unconfirmed date does not save the date.
 - [ ] A countdown of a year or more reads "<1% gone" (not "0%") from its first hour.
 - [ ] While the percentage reads 24–26%, 32–34%, 49–51% or 65–67%, the caption adds "a quarter", "a third", "half" or "two thirds"; on a countdown longer than about 100 days, only for the 3 days around the mark.
 - [ ] Switch to another tab: the countdown's tab reads "3d 12h 58m · Name" and keeps counting by the minute; back on the tab it reads just the name.

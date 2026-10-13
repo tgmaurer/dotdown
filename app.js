@@ -521,9 +521,10 @@ function addGoalRow(text) {
 }
 
 // Builds a countdown from the form, or returns null if name or date is unusable.
-function formToState() {
+// date: the date to use. The form's own date unless the caller passes another.
+function formToState(date = dateInput.value) {
   const name = clip(nameInput.value.trim(), MAX_NAME);
-  if (!name || !parseDate(dateInput.value)) return null;
+  if (!name || !parseDate(date)) return null;
   const goals = Array.from(goalRows.querySelectorAll('input'))
     .map((input) => clip(input.value.trim(), MAX_GOAL))
     .filter(Boolean)
@@ -531,7 +532,7 @@ function formToState() {
     .map((t) => ({ t }));
   // The creation time is set once, when the countdown is made, and then kept.
   const created = state ? state.c : nowStamp();
-  return { v: VERSION, t: name, d: dateInput.value, c: created, g: goals };
+  return { v: VERSION, t: name, d: date, c: created, g: goals };
 }
 
 // The one path every change takes: URL, storage, screen, hint.
@@ -551,8 +552,10 @@ function commit(next, created) {
 }
 
 // Saves the form while editing, if it is valid and something really changed.
-function saveEdits() {
-  const next = formToState();
+// The date is the exception: it is saved only when confirmed with Done
+// (confirmDate), never as a side effect of leaving another field.
+function saveEdits(confirmDate = false) {
+  const next = formToState(confirmDate ? dateInput.value : state.d);
   if (next && encode(next) !== encode(state)) commit(next, false);
 }
 
@@ -739,12 +742,13 @@ editor.addEventListener('submit', (event) => {
   nameInput.setCustomValidity(nameInput.value.trim() ? '' : 'Give the countdown a name.');
   dateInput.setCustomValidity(parseDate(dateInput.value) ? '' : 'Pick a real date (YYYY-MM-DD).');
   if (!editor.reportValidity()) return;
-  if (state) saveEdits();
+  if (state) saveEdits(true);
   else commit(formToState(), true);
   closeEditor();
 });
 
-// While editing, each field saves as soon as it is left. (`change`, not
+// While editing, the name and goals save as soon as they are left; the date
+// waits for Done. (`change`, not
 // `input`: one URL update per field instead of one per keystroke.)
 editor.addEventListener('change', () => {
   if (state) saveEdits();
