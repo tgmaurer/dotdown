@@ -521,9 +521,9 @@ function addGoalRow(text) {
 }
 
 // Builds a countdown from the form, or returns null if name or date is unusable.
-// date: the date to use. The form's own date unless the caller passes another.
-function formToState(date = dateInput.value) {
+function formToState() {
   const name = clip(nameInput.value.trim(), MAX_NAME);
+  const date = dateInput.value;
   if (!name || !parseDate(date)) return null;
   const goals = Array.from(goalRows.querySelectorAll('input'))
     .map((input) => clip(input.value.trim(), MAX_GOAL))
@@ -551,11 +551,11 @@ function commit(next, created) {
   if (editor.hidden) showPendingHint();
 }
 
-// Saves the form while editing, if it is valid and something really changed.
-// The date is the exception: it is saved only when confirmed with Done
-// (confirmDate), never as a side effect of leaving another field.
-function saveEdits(confirmDate = false) {
-  const next = formToState(confirmDate ? dateInput.value : state.d);
+// Saves the edit form on Done, if it is valid and something really changed.
+// Nothing is saved before that: Close drops every change, and the form is
+// filled again from the saved countdown the next time it opens.
+function saveEdits() {
+  const next = formToState();
   if (next && encode(next) !== encode(state)) commit(next, false);
 }
 
@@ -742,16 +742,9 @@ editor.addEventListener('submit', (event) => {
   nameInput.setCustomValidity(nameInput.value.trim() ? '' : 'Give the countdown a name.');
   dateInput.setCustomValidity(parseDate(dateInput.value) ? '' : 'Pick a real date (YYYY-MM-DD).');
   if (!editor.reportValidity()) return;
-  if (state) saveEdits(true);
+  if (state) saveEdits();
   else commit(formToState(), true);
   closeEditor();
-});
-
-// While editing, the name and goals save as soon as they are left; the date
-// waits for Done. (`change`, not
-// `input`: one URL update per field instead of one per keystroke.)
-editor.addEventListener('change', () => {
-  if (state) saveEdits();
 });
 
 // Clear old error bubbles as soon as the user types again.
@@ -767,7 +760,6 @@ goalRows.addEventListener('click', (event) => {
   remove.parentElement.remove();
   $('f-add').disabled = false;
   $('f-add').focus();
-  if (state) saveEdits();
 });
 
 // Enter in a goal moves on to the next goal (adding one after the last)
@@ -794,8 +786,6 @@ const middle = (row) => {
 goalRows.addEventListener('pointerdown', (event) => {
   const grip = event.target.closest('.grip');
   if (!grip || dragged) return;
-  // Leave any field being typed in first, so its text is saved before rows move.
-  if (editor.contains(document.activeElement)) document.activeElement.blur();
   dragged = grip.parentElement;
   dragged.classList.add('dragging');
   grip.setPointerCapture(event.pointerId);
@@ -825,7 +815,6 @@ function endDrag() {
   if (!dragged) return;
   dragged.classList.remove('dragging');
   dragged = null;
-  if (state) saveEdits();
 }
 
 goalRows.addEventListener('pointerup', endDrag);
@@ -842,7 +831,6 @@ goalRows.addEventListener('keydown', (event) => {
   event.preventDefault();
   if (event.key === 'ArrowUp') row.after(other);
   else row.before(other);
-  if (state) saveEdits();
 });
 
 $('edit-toggle').addEventListener('click', () => {

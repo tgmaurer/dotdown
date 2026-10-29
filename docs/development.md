@@ -88,13 +88,13 @@ reach them.
 - [ ] Check across a DST change date: the target is still local midnight.
 - [ ] iPad/iPhone: add to the home screen with a hash in place, open it from the icon, and confirm the countdown loads. If standalone mode drops the hash, flip `STATE_MODE` to `'query'` and retest.
 - [ ] iPad/iPhone: edit the countdown inside the home screen app, close the app completely, and open it from the icon again. The edit is still there.
-- [ ] Edit, then check the title updates and the URL updates. Press Done: the editor closes and the "re-bookmark" hint appears.
+- [ ] Edit, then press Done: the editor closes, the title and the URL update, and the "re-bookmark" hint appears.
 - [ ] Getting close: in the last quarter of its span (at most the last 30 days) a countdown shows a yellow "Getting close" tag.
 - [ ] Final stretch: in the last tenth of its span (at most the last 7 days, at least the last day) the tag turns red, reads "Time is almost up", and the day number turns red. One day earlier it does not.
 - [ ] "% gone" starts at 0% for a new countdown, rises during the day, and reads 100% only once the target is reached.
 - [ ] From a countdown, press "New countdown" and create another one. The browser's Back button returns to the first countdown, and Forward to the new one. Editing does not add Back steps.
 - [ ] The caption leads with the days gone, matching the dot grid: "0 days / <1% gone", "1 day / 1% gone", "5 days / 2% gone". It does not wrap awkwardly on a narrow phone.
-- [ ] Editing: name and goals save as you leave each field, but a changed date does not save (URL, storage, countdown) until Done is pressed. Closing with "Close" instead drops the date change, and editing the name with an unconfirmed date does not save the date.
+- [ ] Editing: nothing saves (URL, storage, countdown) until Done is pressed: not a changed name, date or goal, a removed goal, or a new goal order. Pressing "Close" instead drops every change, and opening the editor again shows the saved countdown.
 - [ ] A countdown of a year or more reads "<1% gone" (not "0%") from its first hour.
 - [ ] While the percentage reads 24–26%, 32–34%, 49–51% or 65–67%, the caption adds "a quarter", "a third", "half" or "two thirds"; on a countdown longer than about 100 days, only for the 3 days around the mark.
 - [ ] Switch to another tab: the countdown's tab reads "3d 12h 58m · Name" and keeps counting by the minute; back on the tab it reads just the name.
@@ -103,7 +103,7 @@ reach them.
 - [ ] The "until" date ends in the time zone offset (for example `GMT+2`) and stays on one line on a phone.
 - [ ] Press Edit on a phone: the page scrolls down to the form.
 - [ ] "Privacy" (corner or More menu) opens the privacy page in the same tab, with no white flash in dark mode. "Back to Dotdown" and the browser's Back both return to the same countdown, also in the home screen app.
-- [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. The new order survives a reload.
+- [ ] While editing, drag a goal to a new place by its grip (mouse and finger), and move one with the arrow keys while its grip is focused. After Done, the new order survives a reload.
 
 ## Domain
 
